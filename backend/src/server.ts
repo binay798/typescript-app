@@ -1,19 +1,15 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config({ path: path.resolve(`${__dirname}/config.env`) });
+import app from './app';
+import mongoose from 'mongoose';
 
-const app = express();
-
-// MIDDLEWARES
-app.use(
-  cors({
-    origin: ['http://localhost:3000'],
-  })
-);
-
-// API ROUTES
-app.get('/', (req: Request, res: Response): void => {
-  res.send('hello world');
-});
+const DB = process.env.DATABASE || 'sth';
+// CONNECT TO DATABASE
+mongoose
+  .connect(DB)
+  .then((con) => console.log('Connection successful'))
+  .catch((err) => console.log(err.message));
 
 const PORT = process.env.PORT || 8000;
 
