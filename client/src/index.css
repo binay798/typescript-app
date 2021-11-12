@@ -12,6 +12,8 @@
   --light: rgb(214, 208, 208);
   --heading-primary: #999da1;
   --divider: #e3d5d554;
+  --gray-dark: #3a3b3c;
+  --gray-dark-hover: #665c5c;
 }
 
 html {
