@@ -1,9 +1,17 @@
 *,
-*::after,
-*::before {
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+:root {
+  --appbar: #242526;
+  --body: #18191a;
+  --light: rgb(214, 208, 208);
+  --heading-primary: #999da1;
+  --divider: #e3d5d554;
 }
 
 html {
@@ -13,5 +21,6 @@ html {
 
 body {
   font-size: 1.6rem;
-  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }

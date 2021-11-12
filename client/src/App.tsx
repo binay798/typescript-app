@@ -1,10 +1,30 @@
 import React from 'react';
+import './App.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Routes, Route } from 'react-router-dom';
+import Layout from './containers/Layout/Layout';
+import Homepage from './containers/Homepage/Homepage';
+
+const theme = createTheme({
+  typography: {
+    htmlFontSize: 10,
+  },
+  palette: {
+    mode: 'dark',
+  },
+});
 
 function App() {
   return (
-    <div className='App'>
-      <h1>Hello world</h1>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className='App'>
+        <Routes>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Homepage />} />
+          </Route>
+        </Routes>
+      </div>
+    </ThemeProvider>
   );
 }
 
