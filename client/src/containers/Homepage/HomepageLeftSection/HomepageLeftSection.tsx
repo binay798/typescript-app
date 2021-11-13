@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import { Link } from 'react-router-dom';
+import * as images from './../../../utils/images';
 
 function HomepageLeftSection(): JSX.Element {
   return (
@@ -24,22 +26,25 @@ function HomepageLeftSection(): JSX.Element {
       }}
     >
       <List>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar
-              src='https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
-              alt='B'
-            />
-          </ListItemIcon>
-          <ListItemText primary='Binay shrestha' />
-        </ListItemButton>
+        <Link to='profile' style={{ color: 'inherit', textDecoration: 'none' }}>
+          <ListItemButton>
+            <ListItemIcon>
+              <Avatar src={images.person[4]} alt='B' />
+            </ListItemIcon>
+            <ListItemText primary='Binay shrestha' />
+          </ListItemButton>
+        </Link>
+
         <Divider sx={{ borderColor: 'var(--divider)' }} />
-        <ListItemButton>
-          <ListItemIcon>
-            <GroupsIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
-          </ListItemIcon>
-          <ListItemText primary='My Groups' />
-        </ListItemButton>
+        <Link to='/groups'>
+          <ListItemButton>
+            <ListItemIcon>
+              <GroupsIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
+            </ListItemIcon>
+            <ListItemText primary='Groups' />
+          </ListItemButton>
+        </Link>
+
         <ListItemButton>
           <ListItemIcon>
             <GroupAddIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
@@ -68,76 +73,35 @@ function HomepageLeftSection(): JSX.Element {
         </Typography>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://styles.redditmedia.com/t5_2wmvy/styles/communityIcon_72agqrawocc71.png'
-              alt='A'
-            />
+            <Avatar src={images.groups[0]} alt='A' />
           </ListItemIcon>
           <ListItemText primary='Animal lovers' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://cdn.iconscout.com/icon/premium/png-256-thumb/aerospace-642028.png'
-              alt='A'
-            />
+            <Avatar src={images.groups[1]} alt='A' />
           </ListItemIcon>
           <ListItemText primary='Aerospace' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://static-s.aa-cdn.net/img/ios/882400137/e49ec71ef09be47d0ee6f0cd4a7bb3f1?v=1'
-              alt='A'
-            />
+            <Avatar src={images.groups[2]} alt='A' />
           </ListItemIcon>
           <ListItemText primary='Meme group' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://cdn.iconscout.com/icon/free/png-256/web-programming-2337692-1953988.png'
-              alt='A'
-            />
+            <Avatar src={images.groups[3]} alt='A' />
           </ListItemIcon>
           <ListItemText primary='Javascript Programming' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://cdn.iconscout.com/icon/premium/png-256-thumb/technology-2462499-2076039.png'
-              alt='A'
-            />
+            <Avatar src={images.groups[4]} alt='A' />
           </ListItemIcon>
           <ListItemText primary='Technology' />
         </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar
-              src='https://cdn.iconscout.com/icon/premium/png-256-thumb/technology-2462499-2076039.png'
-              alt='A'
-            />
-          </ListItemIcon>
-          <ListItemText primary='Technology' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar
-              src='https://cdn.iconscout.com/icon/premium/png-256-thumb/technology-2462499-2076039.png'
-              alt='A'
-            />
-          </ListItemIcon>
-          <ListItemText primary='Technology' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar
-              src='https://cdn.iconscout.com/icon/premium/png-256-thumb/technology-2462499-2076039.png'
-              alt='A'
-            />
-          </ListItemIcon>
-          <ListItemText primary='Technology' />
-        </ListItemButton>
+
         <Button sx={{ margin: '2rem' }} variant='contained'>
           Explore more groups
         </Button>

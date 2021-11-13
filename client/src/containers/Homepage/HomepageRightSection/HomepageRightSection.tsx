@@ -8,6 +8,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
+import * as images from './../../../utils/images';
 
 function HomepageRightSection() {
   return (
@@ -35,46 +36,31 @@ function HomepageRightSection() {
         </Typography>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://i.insider.com/55d4ccbf2acae717448bf0ce?width=600&format=jpeg&auto=webp'
-              alt='B'
-            />
+            <Avatar src={images.person[0]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Obama Riot' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://www.pinclipart.com/picdir/middle/549-5498506_happy-person-png-transparent-images-happy-black-woman.png'
-              alt='B'
-            />
+            <Avatar src={images.person[1]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Christine Smith' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://www.artofliving.org/sites/www.artofliving.org/files/styles/original_image/public/wysiwyg_imageupload/guilherme-stecanella-375176-unsplash.jpg?itok=lR2wOhfN'
-              alt='B'
-            />
+            <Avatar src={images.person[2]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Julia Mendosa' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://cdn.tinybuddha.com/wp-content/uploads/2016/01/Happy-Guy.jpg'
-              alt='B'
-            />
+            <Avatar src={images.person[3]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Robert Smith' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
-              alt='B'
-            />
+            <Avatar src={images.person[4]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Binay shrestha' />
         </ListItemButton>
@@ -99,46 +85,31 @@ function HomepageRightSection() {
         </Typography>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://i.insider.com/55d4ccbf2acae717448bf0ce?width=600&format=jpeg&auto=webp'
-              alt='B'
-            />
+            <Avatar src={images.person[0]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Obama Riot' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://www.pinclipart.com/picdir/middle/549-5498506_happy-person-png-transparent-images-happy-black-woman.png'
-              alt='B'
-            />
+            <Avatar src={images.person[1]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Christine Smith' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://www.artofliving.org/sites/www.artofliving.org/files/styles/original_image/public/wysiwyg_imageupload/guilherme-stecanella-375176-unsplash.jpg?itok=lR2wOhfN'
-              alt='B'
-            />
+            <Avatar src={images.person[2]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Julia Mendosa' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://cdn.tinybuddha.com/wp-content/uploads/2016/01/Happy-Guy.jpg'
-              alt='B'
-            />
+            <Avatar src={images.person[3]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Robert Smith' />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <Avatar
-              src='https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
-              alt='B'
-            />
+            <Avatar src={images.person[4]} alt='B' />
           </ListItemIcon>
           <ListItemText primary='Binay shrestha' />
         </ListItemButton>

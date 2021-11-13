@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import * as classes from './Layout.style';
 import LoginIcon from '@mui/icons-material/Login';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import { Link } from 'react-router-dom';
 
 function Layout(): JSX.Element {
   return (
@@ -12,7 +13,9 @@ function Layout(): JSX.Element {
         <AppBar sx={classes.appBar} position='sticky'>
           <Toolbar>
             <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-              Blogify
+              <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
+                Blogify
+              </Link>
             </Typography>
             <Stack direction='row' spacing={2}>
               <Button

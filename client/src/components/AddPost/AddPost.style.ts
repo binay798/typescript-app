@@ -1,7 +1,8 @@
-export const container = {
-  minHeight: '100vh',
-  backgroundColor: 'var(--body)',
-  color: 'var(--light)',
+export const addPostPaper = {
+  maxWidth: '60rem',
+  padding: '3rem',
+  margin: '0 auto',
+  background: 'var(--appbar)',
 };
 
 export const postBtn = {
