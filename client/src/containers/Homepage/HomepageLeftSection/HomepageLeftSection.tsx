@@ -36,7 +36,7 @@ function HomepageLeftSection(): JSX.Element {
         </Link>
 
         <Divider sx={{ borderColor: 'var(--divider)' }} />
-        <Link to='/groups'>
+        <Link style={{ color: 'inherit', textDecoration: 'none' }} to='/groups'>
           <ListItemButton>
             <ListItemIcon>
               <GroupsIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />

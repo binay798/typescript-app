@@ -9,6 +9,8 @@ import Posts from './containers/Profile/Posts/Posts';
 import About from './containers/Profile/About/About';
 import Photos from './containers/Profile/Photos/Photos';
 import Groups from './containers/Groups/Groups';
+import GroupMain from './containers/Groups/GroupMain/GroupMain';
+import Group from './containers/Groups/Group/Group';
 
 const theme = createTheme({
   typography: {
@@ -31,7 +33,10 @@ function App() {
               <Route path='about' element={<About />} />
               <Route path='photos' element={<Photos />} />
             </Route>
-            <Route path='groups' element={<Groups />} />
+            <Route path='groups' element={<Groups />}>
+              <Route index element={<GroupMain />} />
+              <Route path=':id' element={<Group />} />
+            </Route>
           </Route>
         </Routes>
       </div>
