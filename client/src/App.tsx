@@ -11,6 +11,7 @@ import Photos from './containers/Profile/Photos/Photos';
 import Groups from './containers/Groups/Groups';
 import GroupMain from './containers/Groups/GroupMain/GroupMain';
 import Group from './containers/Groups/Group/Group';
+import CreateGroup from './containers/Groups/CreateGroup/CreateGroup';
 
 const theme = createTheme({
   typography: {
@@ -36,6 +37,7 @@ function App() {
             <Route path='groups' element={<Groups />}>
               <Route index element={<GroupMain />} />
               <Route path=':id' element={<Group />} />
+              <Route path='create' element={<CreateGroup />} />
             </Route>
           </Route>
         </Routes>

@@ -44,13 +44,17 @@ function HomepageLeftSection(): JSX.Element {
             <ListItemText primary='Groups' />
           </ListItemButton>
         </Link>
-
-        <ListItemButton>
-          <ListItemIcon>
-            <GroupAddIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
-          </ListItemIcon>
-          <ListItemText primary='Add group' />
-        </ListItemButton>
+        <Link
+          style={{ color: 'inherit', textDecoration: 'none' }}
+          to='/groups/create'
+        >
+          <ListItemButton>
+            <ListItemIcon>
+              <GroupAddIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
+            </ListItemIcon>
+            <ListItemText primary='Create group' />
+          </ListItemButton>
+        </Link>
       </List>
 
       {/* RECENTELY ADDED GROUPS */}
