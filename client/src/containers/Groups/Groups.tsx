@@ -16,6 +16,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { groups } from '../../utils/images';
 import { blueGrey } from '@mui/material/colors';
 import { Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const leftSideStyle = {
   background: 'var(--appbar)',
@@ -65,13 +66,19 @@ function Groups() {
             }}
           />
           {/* CREATE NEW GROUP BUTTON */}
-          <Button
-            startIcon={<AddIcon />}
-            sx={{ width: '100%', marginTop: '2rem' }}
-            variant='contained'
+          <Link
+            style={{ color: 'inherit', textDecoration: 'none' }}
+            to='/groups/create'
           >
-            Create New Group
-          </Button>
+            <Button
+              startIcon={<AddIcon />}
+              sx={{ width: '100%', marginTop: '2rem' }}
+              variant='contained'
+            >
+              Create New Group
+            </Button>
+          </Link>
+
           {/* GROUPS THAT YOU HAVE JOINED */}
           <YourGroupList />
         </Box>
