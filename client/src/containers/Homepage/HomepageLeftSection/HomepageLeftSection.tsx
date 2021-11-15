@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Link } from 'react-router-dom';
 import * as images from './../../../utils/images';
 
@@ -52,7 +53,15 @@ function HomepageLeftSection(): JSX.Element {
             <ListItemIcon>
               <GroupAddIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
             </ListItemIcon>
-            <ListItemText primary='Create group' />
+            <ListItemText primary='Create Group' />
+          </ListItemButton>
+        </Link>
+        <Link style={{ color: 'inherit', textDecoration: 'none' }} to='/users'>
+          <ListItemButton>
+            <ListItemIcon>
+              <PeopleAltIcon sx={{ color: 'var(--light)', fontSize: '3rem' }} />
+            </ListItemIcon>
+            <ListItemText primary='All Users' />
           </ListItemButton>
         </Link>
       </List>

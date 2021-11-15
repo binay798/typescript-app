@@ -4,11 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import ErrorBoundary from './Hoc/ErrorBoundaries';
+import Store from './store/Store';
 
 const app = (
   <BrowserRouter>
     <React.StrictMode>
-      <App />
+      <Store>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </Store>
     </React.StrictMode>
   </BrowserRouter>
 );

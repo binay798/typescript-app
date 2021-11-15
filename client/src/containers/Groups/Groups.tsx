@@ -24,6 +24,7 @@ const leftSideStyle = {
   padding: '1rem',
   height: '100%',
   '&::-webkit-scrollbar': { display: 'none' },
+  borderRight: '1px solid gray',
 };
 
 const rightSideStyle = {
@@ -110,9 +111,9 @@ function YourGroupList(): JSX.Element {
       </Typography>
       {/* MAIN GROUP LIST CONTAINER */}
       <List>
-        {groups.map((el) => {
+        {groups.map((el, id) => {
           return (
-            <ListItem disablePadding>
+            <ListItem key={id} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   <img style={img} alt='hello' src={el} />

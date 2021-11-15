@@ -96,13 +96,9 @@ function Intro(): JSX.Element {
             primary={
               <Typography variant='body2'>
                 Went to
-                <Typography
-                  variant='body2'
-                  color='secondary'
-                  style={{ fontWeight: 600 }}
-                >
-                  Amrit science campus
-                </Typography>{' '}
+                <span style={{ fontWeight: 600, display: 'block' }}>
+                  Amrit Science Campus
+                </span>
               </Typography>
             }
           />
@@ -115,13 +111,9 @@ function Intro(): JSX.Element {
             primary={
               <Typography variant='body2'>
                 Went to
-                <Typography
-                  variant='body2'
-                  color='secondary'
-                  style={{ fontWeight: 600 }}
-                >
+                <span style={{ fontWeight: 600, display: 'block' }}>
                   Everest Innovative College
-                </Typography>{' '}
+                </span>
               </Typography>
             }
           />
@@ -134,13 +126,9 @@ function Intro(): JSX.Element {
             primary={
               <Typography variant='body2'>
                 Lives in
-                <Typography
-                  variant='body2'
-                  color='secondary'
-                  style={{ fontWeight: 600 }}
-                >
-                  Kathmandu, Nepal
-                </Typography>{' '}
+                <span style={{ fontWeight: 600, display: 'block' }}>
+                  Kathmandu,Nepal
+                </span>
               </Typography>
             }
           />
@@ -153,13 +141,9 @@ function Intro(): JSX.Element {
             primary={
               <Typography variant='body2'>
                 From
-                <Typography
-                  variant='body2'
-                  color='secondary'
-                  style={{ fontWeight: 600 }}
-                >
+                <span style={{ fontWeight: 600, display: 'block' }}>
                   Kathmandu, Nepal
-                </Typography>{' '}
+                </span>
               </Typography>
             }
           />
