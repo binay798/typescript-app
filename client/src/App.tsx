@@ -14,7 +14,8 @@ import Auth from './containers/Auth/Auth';
 import LazyComponent from './components/LazyComponent/LazyComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/Store';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import EditProfile from './containers/Profile/EditProfile/EditProfile';
 
 const Homepage = React.lazy(() => import('./containers/Homepage/Homepage'));
 const Profile = React.lazy(() => import('./containers/Profile/Profile'));
@@ -35,12 +36,15 @@ const theme = createTheme({
 
 function App(): JSX.Element {
   const navigate = useNavigate();
+  const location = useLocation();
   const state = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
+    if (location.pathname === '/auth/signup') return;
     if (!state.user) {
       navigate('/auth');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, state.user]);
 
   return (
@@ -55,6 +59,7 @@ function App(): JSX.Element {
                   index
                   element={<LazyComponent component={<Homepage />} />}
                 />
+                {/* PROFILE */}
                 <Route
                   path='profile'
                   element={<LazyComponent component={<Profile />} />}
@@ -62,13 +67,17 @@ function App(): JSX.Element {
                   <Route index element={<Posts />} />
                   <Route path='about' element={<About />} />
                   <Route path='photos' element={<Photos />} />
+                  <Route path='edit' element={<EditProfile />} />
                 </Route>
                 <Route
                   path='groups'
                   element={<LazyComponent component={<Groups />} />}
                 >
                   <Route index element={<GroupMain />} />
-                  <Route path=':id' element={<Group />} />
+                  <Route
+                    path=':id'
+                    element={<LazyComponent component={<Group />} />}
+                  />
                   <Route
                     path='create'
                     element={<LazyComponent component={<CreateGroup />} />}

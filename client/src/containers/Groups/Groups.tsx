@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Grid,
   Box,
@@ -13,14 +14,19 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import { groups } from '../../utils/images';
 import { blueGrey } from '@mui/material/colors';
 import { Outlet } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from '../../axiosInstance';
+import * as Actions from '../../store/actions/index';
+import { RootState } from '../../store/Store';
+import { Group } from '../../store/reducers/group.reducer';
+import { baseUrl } from '../../axiosInstance';
 
 const leftSideStyle = {
   background: 'var(--appbar)',
-  maxHeight: '100vh',
+  minHeight: 'calc(100vh - 6rem)',
   padding: '1rem',
   height: '100%',
   '&::-webkit-scrollbar': { display: 'none' },
@@ -29,8 +35,8 @@ const leftSideStyle = {
 
 const rightSideStyle = {
   background: 'var(--body)',
-  maxHeight: '100vh',
-  height: '100%',
+  height: 'calc(100vh - 6rem)',
+  overflowY: 'scroll',
 };
 
 const img = {
@@ -40,6 +46,21 @@ const img = {
 };
 
 function Groups() {
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.group);
+  useEffect(() => {
+    (async () => {
+      try {
+        let res = await axios.get('/api/v1/groups');
+        dispatch({
+          type: Actions.GroupAction.GET_GROUPS,
+          payload: res.data,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [dispatch]);
   return (
     <Grid container>
       <Grid item sm={3}>
@@ -81,7 +102,7 @@ function Groups() {
           </Link>
 
           {/* GROUPS THAT YOU HAVE JOINED */}
-          <YourGroupList />
+          <YourGroupList groups={state.groups} />
         </Box>
       </Grid>
       <Grid item sm={9}>
@@ -99,7 +120,11 @@ function Groups() {
   );
 }
 
-function YourGroupList(): JSX.Element {
+interface YourGroupListProps {
+  groups: Group[];
+}
+
+function YourGroupList(props: YourGroupListProps): JSX.Element {
   return (
     <Box>
       <Typography
@@ -111,28 +136,38 @@ function YourGroupList(): JSX.Element {
       </Typography>
       {/* MAIN GROUP LIST CONTAINER */}
       <List>
-        {groups.map((el, id) => {
+        {props.groups.map((el, id) => {
           return (
-            <ListItem key={id} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <img style={img} alt='hello' src={el} />
-                </ListItemIcon>
-                <ListItemText
-                  sx={{ color: blueGrey[100] }}
-                  primary={
-                    <Typography
-                      color='secondary.light'
-                      sx={{ fontWeight: 600 }}
-                      variant='body2'
-                    >
-                      DN:Javascript Developers
-                    </Typography>
-                  }
-                  secondary='1.6k members'
-                />
-              </ListItemButton>
-            </ListItem>
+            <Link
+              to={`/groups/${el._id}`}
+              key={id}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <img
+                      style={img}
+                      alt={el.name}
+                      src={`${baseUrl}/static/images/${el.photo}`}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{ color: blueGrey[100] }}
+                    primary={
+                      <Typography
+                        color='secondary.light'
+                        sx={{ fontWeight: 600 }}
+                        variant='body2'
+                      >
+                        {el.name}
+                      </Typography>
+                    }
+                    secondary='1.6k members'
+                  />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           );
         })}
       </List>

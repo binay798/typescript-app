@@ -3,11 +3,9 @@ import { Paper, Typography, Stack, TextField, Button } from '@mui/material';
 import logo from './../../../assets/logo.jpeg';
 import { blueGrey } from '@mui/material/colors';
 import LoginIcon from '@mui/icons-material/Login';
-import { Link } from 'react-router-dom';
-import axios from './../../../axiosInstance';
-import { User } from './../../../store/reducers/auth.reducer';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import * as Actions from './../../../store/actions/index';
+import * as actionCreators from './../../../store/actionCreators/index';
 
 const container = {
   padding: '2rem',
@@ -24,6 +22,7 @@ const img = {
 };
 function Signup() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [firstname, setFirstname] = useState('');
   const [lastname, setlastname] = useState('');
   const [username, setUsername] = useState('');
@@ -35,23 +34,20 @@ function Signup() {
   // ------NEEDS TO BE REFACTORED FOR VALIDATION------
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await axios.post<User>('/api/v1/users/signup', {
-        firstname,
-        lastname,
-        username,
-        email,
-        password,
-        confirmPassword,
-      });
-      const data = res.data;
-
-      dispatch({ type: Actions.AuthAction.SIGNUP, payload: data });
-    } catch (e) {
-      console.log(e);
-    }
-    setLoading(false);
+    dispatch(
+      actionCreators.signup(
+        {
+          firstname,
+          lastname,
+          username,
+          email,
+          password,
+          confirmPassword,
+        },
+        setLoading,
+        navigate
+      )
+    );
   };
 
   return (

@@ -15,9 +15,14 @@ import {
 import { Box } from '@mui/system';
 import * as classes from './AddPost.style';
 import CloseIcon from '@mui/icons-material/Close';
-import { person } from '../../utils/images';
 import PublicIcon from '@mui/icons-material/Public';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/Store';
+import { baseUrl } from '../../axiosInstance';
+import { User } from '../../store/reducers/auth.reducer';
+import { useDispatch } from 'react-redux';
+import * as actionCreators from './../../store/actionCreators/index';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -31,16 +36,17 @@ const style = {
 };
 
 function AddPost(): JSX.Element {
+  const state = useSelector((state: RootState) => state.auth);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
     <Paper sx={classes.addPostPaper}>
       <Stack spacing={4} direction='row'>
-        <Avatar src='https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80' />
+        <Avatar src={`${baseUrl}/static/images/${state.user?.photo}`} />
 
         <Box onClick={handleOpen} sx={classes.postBtn}>
-          What's on your mind John?
+          What's on your mind {state.user?.firstname}?
         </Box>
       </Stack>
       <Divider sx={{ borderColor: 'var(--divider)', marginTop: '2rem' }} />
@@ -50,6 +56,7 @@ function AddPost(): JSX.Element {
         open={open}
         handleOpen={handleOpen}
         handleClose={handleClose}
+        user={state.user}
       />
     </Paper>
   );
@@ -59,21 +66,37 @@ interface CreatePostModalProps {
   open: boolean;
   handleOpen(): void;
   handleClose(): void;
+  user: User | null;
 }
 
 function CreatePostModal(props: CreatePostModalProps): JSX.Element {
-  const [file, setFile] = useState<ArrayBuffer | null | string>();
+  const dispatch = useDispatch();
+  const [file, setFile] = useState<File>();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [imgSrc, setImgSrc] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
+    const files = e.target.files;
     const reader = new FileReader();
+    if (!files) return;
+    setFile(files[0]);
 
     reader.addEventListener('load', function () {
-      setFile(reader.result);
+      setImgSrc(reader.result as string);
     });
-    if (file) {
-      reader.readAsDataURL(file[0]);
+    if (files) {
+      reader.readAsDataURL(files[0]);
     }
+  };
+
+  const submitHandler = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (title === '' || description === '' || file === undefined) return;
+    dispatch(
+      actionCreators.createPost({ title, description, photo: file }, setLoading)
+    );
   };
   return (
     <Modal
@@ -104,25 +127,41 @@ function CreatePostModal(props: CreatePostModalProps): JSX.Element {
         </IconButton>
         {/* USER DETAIL */}
         <Stack direction='row' spacing={2} sx={{ marginBottom: '1rem' }}>
-          <Avatar src={person[2]} alt='person' />
+          <Avatar
+            src={`${baseUrl}/static/images/${props.user?.photo}`}
+            alt='person'
+          />
           <ListItemText
             primary={
-              <Typography variant='body1' sx={{ fontWeight: 600 }}>
-                Binay shrestha
+              <Typography
+                variant='body1'
+                component='div'
+                sx={{ fontWeight: 600 }}
+              >
+                {props.user?.firstname} {props.user?.lastname}
               </Typography>
             }
             secondary={
-              <Stack direction='row' spacing={1} alignItems='center'>
-                <PublicIcon sx={{ width: 20, height: 20 }} />
-                <Typography variant='caption'>Public</Typography>
-              </Stack>
+              <Typography variant='caption' component='div'>
+                <Stack direction='row' spacing={1} alignItems='center'>
+                  <PublicIcon sx={{ width: 20, height: 20 }} />
+                  <span>Public</span>
+                </Stack>
+              </Typography>
             }
           />
         </Stack>
 
         {/* FORM */}
-        <form>
+        <form onSubmit={submitHandler}>
           <Stack direction='column' spacing={2}>
+            <TextField
+              label='Title'
+              variant='outlined'
+              sx={{ width: '100%' }}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
             <TextField
               id='standard-multiline-static'
               label='What is on your mind Binay? '
@@ -130,6 +169,8 @@ function CreatePostModal(props: CreatePostModalProps): JSX.Element {
               rows={4}
               variant='outlined'
               sx={{ width: '100%' }}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
             <Stack direction='row' alignItems='center'>
               <Typography
@@ -155,8 +196,26 @@ function CreatePostModal(props: CreatePostModalProps): JSX.Element {
                 </IconButton>
               </label>
             </Stack>
+            {/* SELECTED IMAGE */}
+            {imgSrc && (
+              <img
+                src={imgSrc}
+                style={{
+                  display: 'block',
+                  height: '10rem',
+                  objectFit: 'contain',
+                  borderRadius: '4px',
+                }}
+                alt='selected'
+              />
+            )}
             {/* BUTTON */}
-            <Button variant='contained' color='secondary'>
+            <Button
+              disabled={loading}
+              variant='contained'
+              type='submit'
+              color='secondary'
+            >
               Create Post
             </Button>
           </Stack>

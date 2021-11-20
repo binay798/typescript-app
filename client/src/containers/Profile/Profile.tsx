@@ -1,20 +1,47 @@
+import { useState, useEffect } from 'react';
 import {
   Avatar,
   AvatarGroup,
   Badge,
   Box,
+  Button,
   Divider,
   Stack,
   Typography,
+  IconButton,
+  Input,
+  Modal,
+  Paper,
 } from '@mui/material';
 import * as classes from './Profile.style';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { blueGrey } from '@mui/material/colors';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, Link } from 'react-router-dom';
 import styles from './Profile.module.css';
 import { person } from './../../utils/images';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import * as actionCreators from './../../store/actionCreators/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './../../store/Store';
+import { baseUrl } from './../../axiosInstance';
 
 function Profile(): JSX.Element {
+  const state = useSelector((state: RootState) => state.auth);
+  const [file, setFile] = useState<File>();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setFile(undefined);
+    setOpen(false);
+  };
+
+  const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    setFile(files[0]);
+    setOpen(true);
+  };
+
   const setActiveClassName = (active: { isActive: boolean }) => {
     if (active.isActive) {
       return `${styles.navBtnActive}`;
@@ -36,25 +63,50 @@ function Profile(): JSX.Element {
             spacing={4}
             alignItems='flex-end'
           >
+            <UploadPhotoModal
+              open={open}
+              handleOpen={handleOpen}
+              handleClose={handleClose}
+              file={file}
+            />
             {/* USER AVATAR */}
             <Badge
               overlap='circular'
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               badgeContent={
-                <Avatar sx={{ bgcolor: blueGrey[900] }}>
-                  <CameraAltIcon sx={{ color: blueGrey[100] }} />
-                </Avatar>
+                <label htmlFor='icon-button-file'>
+                  <Input
+                    sx={{ display: 'none' }}
+                    id='icon-button-file'
+                    type='file'
+                    onChange={fileChangeHandler}
+                  />
+                  <Avatar sx={{ bgcolor: blueGrey[900] }}>
+                    <IconButton
+                      color='primary'
+                      aria-label='upload picture'
+                      component='span'
+                    >
+                      <CameraAltIcon sx={{ color: blueGrey[100] }} />
+                    </IconButton>
+                  </Avatar>
+                </label>
               }
             >
               <Avatar
                 sx={{ width: 170, height: 170 }}
                 alt='Travis Howard'
-                src={person[5]}
+                src={`${baseUrl}/static/images/${state.user?.photo}`}
               />
             </Badge>
             <Stack direction='column'>
-              <Typography variant='h4' color={blueGrey[100]} component='div'>
-                Shambho Ji Shrestha
+              <Typography
+                variant='h4'
+                sx={{ textTransform: 'capitalize' }}
+                color={blueGrey[100]}
+                component='div'
+              >
+                {state.user?.firstname} {state.user?.lastname}
               </Typography>
               <Typography variant='h6' color={blueGrey[100]} component='div'>
                 72 mutual friends
@@ -67,6 +119,11 @@ function Profile(): JSX.Element {
                 <Avatar alt='Trevor Henderson' src={person[4]} />
               </AvatarGroup>
             </Stack>
+            <Link style={{ textDecoration: 'none' }} to='/profile/edit'>
+              <Button variant='contained' color='primary'>
+                Edit Profile
+              </Button>
+            </Link>
           </Stack>
           <Divider sx={{ borderColor: 'var(--divider)', marginTop: '2rem' }} />
         </Box>
@@ -103,3 +160,79 @@ function Profile(): JSX.Element {
 }
 
 export default Profile;
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'var(--appbar)',
+  boxShadow: 24,
+  p: 4,
+  color: 'white',
+};
+interface UploadPhoto {
+  open: boolean;
+  handleClose(): void;
+  handleOpen(): void;
+  file: File | undefined;
+}
+
+function UploadPhotoModal(props: UploadPhoto): JSX.Element {
+  const dispatch = useDispatch();
+  const [imgSrc, setImgSrc] = useState<string>();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function () {
+      setImgSrc(reader.result as string);
+    });
+    if (props.file) {
+      reader.readAsDataURL(props.file);
+    }
+  }, [props.file]);
+
+  const submitHandler = () => {
+    if (!props.file) return;
+    dispatch(actionCreators.updateProfilePic(props.file as File, setLoading));
+  };
+  return (
+    <Modal
+      open={props.open}
+      onClose={props.handleClose}
+      aria-labelledby='modal-modal-title'
+      aria-describedby='modal-modal-description'
+    >
+      <Paper sx={style}>
+        <form>
+          <Stack direction='column' spacing={2}>
+            <img
+              src={imgSrc}
+              alt='profile'
+              style={{
+                display: 'block',
+                height: '25rem',
+                width: '100%',
+                objectFit: 'contain',
+                margin: '0 auto',
+                borderRadius: '4px',
+              }}
+            />
+            <Button
+              sx={{ width: '100%' }}
+              variant='contained'
+              color='secondary'
+              startIcon={<FileUploadIcon />}
+              onClick={submitHandler}
+              disabled={loading}
+            >
+              Upload
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+    </Modal>
+  );
+}

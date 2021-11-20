@@ -1,30 +1,35 @@
 import * as Actions from './../actions/index';
+import { AuthPayload } from '../actionCreators';
 
 export interface User {
+  _id?: string;
   firstname: string;
   lastname: string;
   username: string;
   email: string;
+  permanentAddress?: string;
+  temporaryAddress?: string;
+  mobile?: number;
+  highSchool?: string;
+  college?: string;
+  photo?: string;
 }
 
 export interface UserAction {
   type: string;
-  payload: {
-    token: string;
-    user: User;
-  };
+  payload: AuthPayload;
 }
 
 type ActionType = UserAction;
 
 export interface InitialState {
   user: User | null;
-  token: string | null;
+  token: string | undefined;
 }
 
 const initialState: InitialState = {
   user: null,
-  token: null,
+  token: undefined,
 };
 
 const reducer = (state = initialState, action: ActionType) => {
@@ -38,8 +43,13 @@ const reducer = (state = initialState, action: ActionType) => {
     case Actions.AuthAction.LOGIN:
       return {
         ...state,
-        user: action.payload.user,
+        user: { ...action.payload.user },
         token: action.payload.token,
+      };
+    case Actions.AuthAction.UPDATE_USER:
+      return {
+        ...state,
+        user: { ...action.payload.user },
       };
     default:
       return state;

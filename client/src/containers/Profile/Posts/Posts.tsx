@@ -19,7 +19,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
 import { Link } from 'react-router-dom';
 import { purple, blueGrey } from '@mui/material/colors';
-import Post from '../../../components/Post/Post';
+// import Post from '../../../components/Post/Post';
 
 function Posts(): JSX.Element {
   return (
@@ -37,8 +37,8 @@ function Posts(): JSX.Element {
 
         {/* ALL POSTS */}
         <Stack direction='column' sx={{ margin: '2rem auto' }} spacing={4}>
-          <Post />
-          <Post />
+          {/* <Post />
+          <Post /> */}
         </Stack>
       </Grid>
     </Grid>

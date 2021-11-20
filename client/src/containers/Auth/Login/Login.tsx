@@ -12,9 +12,8 @@ import logo from './../../../assets/logo.jpeg';
 import { blueGrey } from '@mui/material/colors';
 import LoginIcon from '@mui/icons-material/Login';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from './../../../axiosInstance';
 import { useDispatch } from 'react-redux';
-import * as Actions from './../../../store/actions/index';
+import * as actionCreators from './../../../store/actionCreators/index';
 
 const container = {
   padding: '2rem',
@@ -38,17 +37,7 @@ function Login() {
 
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      let res = await axios.post('/api/v1/users/login', { email, password });
-      const data = res.data;
-      dispatch({ type: Actions.AuthAction.LOGIN, payload: data });
-      setLoading(false);
-      navigate('/');
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    }
+    dispatch(actionCreators.login({ email, password }, setLoading, navigate));
   };
   return (
     <Paper elevation={8} sx={container}>

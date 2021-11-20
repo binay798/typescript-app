@@ -14,8 +14,12 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Link } from 'react-router-dom';
 import * as images from './../../../utils/images';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/Store';
+import { baseUrl } from './../../../axiosInstance';
 
 function HomepageLeftSection(): JSX.Element {
+  const state = useSelector((state: RootState) => state.auth);
   return (
     <Box
       sx={{
@@ -30,9 +34,21 @@ function HomepageLeftSection(): JSX.Element {
         <Link to='profile' style={{ color: 'inherit', textDecoration: 'none' }}>
           <ListItemButton>
             <ListItemIcon>
-              <Avatar src={images.person[4]} alt='B' />
+              <Avatar
+                src={`${baseUrl}/static/images/${state.user?.photo}`}
+                alt='B'
+              />
             </ListItemIcon>
-            <ListItemText primary='Binay shrestha' />
+            <ListItemText
+              primary={
+                <Typography
+                  variant='body1'
+                  sx={{ textTransform: 'capitalize' }}
+                >
+                  {state.user?.firstname} {state.user?.lastname}
+                </Typography>
+              }
+            />
           </ListItemButton>
         </Link>
 

@@ -6,20 +6,24 @@ import {
   CardMedia,
   Typography,
 } from '@mui/material';
-import { groups } from './../../utils/images';
+import { Group } from '../../store/reducers/group.reducer';
+import { baseUrl } from '../../axiosInstance';
 
-function GroupCard() {
+interface GroupCardProps {
+  data: Group;
+}
+function GroupCard(props: GroupCardProps) {
   return (
     <Card sx={{ width: '100%' }}>
       <CardMedia
         component='img'
         height='240'
-        image={groups[0]}
+        image={`${baseUrl}/static/images/${props.data.photo}`}
         alt='green iguana'
       />
       <CardContent>
         <Typography variant='h5' component='div'>
-          Lizard
+          {props.data.name}
         </Typography>
         <Typography color='secondary' variant='caption'>
           26.3k members
