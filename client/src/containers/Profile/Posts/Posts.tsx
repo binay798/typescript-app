@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Paper,
@@ -19,9 +20,31 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
 import { Link } from 'react-router-dom';
 import { purple, blueGrey } from '@mui/material/colors';
-// import Post from '../../../components/Post/Post';
+import Post from '../../../components/Post/Post';
+import axios from '../../../axiosInstance';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/Store';
+import { Post as SinglePost } from '../../../store/reducers/post.reducer';
 
 function Posts(): JSX.Element {
+  const state = useSelector((state: RootState) => state.auth);
+  const [posts, setPosts] = useState<SinglePost[] | null>(null);
+  // GET YOUR POST
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!state.user) return;
+        const authorId = state.user._id;
+        let res = await axios.get(
+          `/api/v1/posts?author=${authorId}&limit=5&populate=author`
+        );
+        setPosts(res.data.posts);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Grid container spacing={2}>
       <Grid item sm={5}>
@@ -37,8 +60,10 @@ function Posts(): JSX.Element {
 
         {/* ALL POSTS */}
         <Stack direction='column' sx={{ margin: '2rem auto' }} spacing={4}>
-          {/* <Post />
-          <Post /> */}
+          {posts &&
+            posts.map((el) => {
+              return <Post data={el} key={el._id} />;
+            })}
         </Stack>
       </Grid>
     </Grid>

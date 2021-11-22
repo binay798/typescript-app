@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Group } from '../../store/reducers/group.reducer';
 import { baseUrl } from '../../axiosInstance';
+import { Link } from 'react-router-dom';
 
 interface GroupCardProps {
   data: Group;
@@ -30,9 +31,14 @@ function GroupCard(props: GroupCardProps) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant='outlined' color='secondary' sx={{ width: '100%' }}>
-          Join Group
-        </Button>
+        <Link
+          style={{ width: '100%', color: 'inherit', textDecoration: 'none' }}
+          to={`/groups/${props.data._id}`}
+        >
+          <Button variant='outlined' color='secondary' sx={{ width: '100%' }}>
+            View Group
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );

@@ -84,3 +84,29 @@ export const leaveGroup = (
     setLoading(false);
   };
 };
+
+interface GroupPost {
+  title: string;
+  description: string;
+  photo: File;
+}
+export const createGroupPost = (
+  data: GroupPost,
+  groupId: string,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  return async (dispatch: Dispatch) => {
+    setLoading(true);
+    try {
+      const fd = new FormData();
+      fd.append('title', data.title);
+      fd.append('description', data.description);
+      fd.append('image', data.photo);
+      const res = await axios.post(`/api/v1/groups/${groupId}/group-post`, fd);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+};

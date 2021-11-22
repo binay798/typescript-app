@@ -12,12 +12,16 @@ import {
   Avatar,
   Button,
   Chip,
+  IconButton,
+  Input,
+  TextField,
+  Divider,
+  Modal,
 } from '@mui/material';
 import { person } from '../../../utils/images';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PublicIcon from '@mui/icons-material/Public';
 import AddIcon from '@mui/icons-material/Add';
-// import Post from './../../../components/Post/Post';
 import { useSelector, useDispatch } from 'react-redux';
 import axios, { baseUrl } from '../../../axiosInstance';
 import * as Actions from '../../../store/actions/index';
@@ -25,6 +29,9 @@ import { RootState } from '../../../store/Store';
 import { useParams } from 'react-router-dom';
 import { Group as GroupMain } from '../../../store/reducers/group.reducer';
 import * as actionCreators from '../../../store/actionCreators/index';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import CloseIcon from '@mui/icons-material/Close';
+import { Post as SinglePost } from '../../../store/reducers/post.reducer';
 
 export const groupPhotoContainer = {
   height: '35rem',
@@ -121,6 +128,19 @@ interface GroupContainerProps {
 }
 
 function GroupContainer(props: GroupContainerProps): JSX.Element {
+  const [posts, setPosts] = useState<SinglePost[] | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(
+          `/api/v1/groups/${props.group._id}/group-post`
+        );
+        setPosts(res.data.posts);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [props.group._id]);
   return (
     <Grid container sx={groupMainContainer} spacing={3}>
       <Grid item sm={7}>
@@ -131,6 +151,10 @@ function GroupContainer(props: GroupContainerProps): JSX.Element {
             <Post />
             <Post />
             <Post /> */}
+            {/* {posts &&
+              posts.map((el: SinglePost) => {
+                return <Post  key={el._id} data={el} />;
+              })} */}
           </Stack>
         </Box>
       </Grid>
@@ -174,7 +198,51 @@ function GroupContainer(props: GroupContainerProps): JSX.Element {
   );
 }
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 450,
+  bgcolor: 'var(--appbar)',
+  boxShadow: 24,
+  p: 2,
+};
 function CreateNewGroupPost(): JSX.Element {
+  const state = useSelector((state: RootState) => state.group);
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const [file, setFile] = useState<File>();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [imgSrc, setImgSrc] = useState<string>();
+  const [loading, setLoading] = useState(false);
+
+  const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const reader = new FileReader();
+    if (!files) return;
+    setFile(files[0]);
+
+    reader.addEventListener('load', function () {
+      setImgSrc(reader.result as string);
+    });
+    if (files) {
+      reader.readAsDataURL(files[0]);
+    }
+  };
+
+  const submitHandler = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (title === '' || description === '' || file === undefined) return;
+    dispatch(
+      actionCreators.createGroupPost(
+        { title, description, photo: file },
+        state.selectedGroup?._id as string,
+        setLoading
+      )
+    );
+  };
   return (
     <Paper sx={{ padding: '2rem' }}>
       <Stack direction='row' spacing={2} alignItems='center'>
@@ -184,10 +252,112 @@ function CreateNewGroupPost(): JSX.Element {
           startIcon={<AddIcon />}
           variant='contained'
           color='secondary'
+          onClick={() => setOpen(true)}
         >
           Create New Post
         </Button>
       </Stack>
+      {/* MODAL */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Paper sx={style}>
+          <Typography
+            id='modal-modal-title'
+            color='secondary.light'
+            variant='h5'
+            component='h1'
+            align='center'
+            gutterBottom
+          >
+            Create Group Post
+          </Typography>
+          <Divider
+            sx={{ borderColor: 'var(--divider)', marginBottom: '2rem' }}
+          />
+
+          {/* CLOSE BUTTON */}
+          <IconButton
+            sx={{ position: 'absolute' as 'absolute', top: 10, right: 10 }}
+            onClick={() => setOpen(false)}
+          >
+            <CloseIcon />
+          </IconButton>
+          {/* USER DETAIL */}
+
+          {/* FORM */}
+          <form onSubmit={submitHandler}>
+            <Stack direction='column' spacing={2}>
+              <TextField
+                label='Title'
+                variant='outlined'
+                sx={{ width: '100%' }}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <TextField
+                id='standard-multiline-static'
+                label='What is on your mind Binay? '
+                multiline
+                rows={4}
+                variant='outlined'
+                sx={{ width: '100%' }}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <Stack direction='row' alignItems='center'>
+                <Typography
+                  color='secondary'
+                  variant='body1'
+                  sx={{ fontWeight: 600 }}
+                >
+                  Add Photo:
+                </Typography>
+                <label htmlFor='icon-button-file'>
+                  <Input
+                    sx={{ display: 'none' }}
+                    id='icon-button-file'
+                    type='file'
+                    onChange={fileChangeHandler}
+                  />
+                  <IconButton
+                    color='primary'
+                    aria-label='upload picture'
+                    component='span'
+                  >
+                    <AddAPhotoIcon />
+                  </IconButton>
+                </label>
+              </Stack>
+              {/* SELECTED IMAGE */}
+              {imgSrc && (
+                <img
+                  src={imgSrc}
+                  style={{
+                    display: 'block',
+                    height: '10rem',
+                    objectFit: 'contain',
+                    borderRadius: '4px',
+                  }}
+                  alt='selected'
+                />
+              )}
+              {/* BUTTON */}
+              <Button
+                disabled={loading}
+                variant='contained'
+                type='submit'
+                color='secondary'
+              >
+                Create Post
+              </Button>
+            </Stack>
+          </form>
+        </Paper>
+      </Modal>
     </Paper>
   );
 }

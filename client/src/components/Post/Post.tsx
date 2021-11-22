@@ -159,15 +159,19 @@ interface CommentState {
 interface CommentProps {
   postId: string;
 }
+
 function CommentBox(props: CommentProps): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
+  const group = useSelector((state: RootState) => state.group);
   const [comments, setComments] = useState<CommentState[] | null>(null);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
+
         let res = await axios.get(`/api/v1/posts/${props.postId}/comments`);
         setComments([...res.data.comments]);
       } catch (err) {
@@ -175,7 +179,7 @@ function CommentBox(props: CommentProps): JSX.Element {
       }
       setLoading(false);
     })();
-  }, [props.postId]);
+  }, [props.postId, group.selectedGroup]);
 
   const createComment = async (e: React.SyntheticEvent) => {
     e.preventDefault();

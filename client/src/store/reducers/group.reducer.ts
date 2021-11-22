@@ -13,6 +13,7 @@ export interface Group {
   photo?: string;
   slug?: string;
 }
+
 export interface InitialState {
   groups: Group[];
   selectedGroup: Group | null;
