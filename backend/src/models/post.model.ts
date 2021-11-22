@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-interface PostSchema extends mongoose.Document {
+export interface PostSchema extends mongoose.Document {
   title: string;
   author: {
     type: typeof mongoose.Types.ObjectId;
@@ -8,7 +8,6 @@ interface PostSchema extends mongoose.Document {
   };
   photo: string;
   description: string;
-  likes: number;
   createdAt: Date;
   updatedAt: Date;
   comments: [{ type: mongoose.Types.ObjectId; ref: 'Comment' }];
@@ -33,11 +32,7 @@ const postSchema = new mongoose.Schema<PostSchema>(
       type: String,
       required: [true, 'Must contain description'],
     },
-    likes: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
     comments: [{ type: mongoose.Types.ObjectId, ref: 'Comment' }],
   },
   { timestamps: true }

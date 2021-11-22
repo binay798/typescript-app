@@ -24,9 +24,16 @@ export const getAllGroups = catchAsync(
 
 export const createGroup = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {
-    const { name, status } = req.body;
+    const { name, status, description, location } = req.body;
     const userId: string = req.user.id;
-    const group = await Group.create({ name, status, admin: userId });
+    const group = await Group.create({
+      name,
+      status,
+      admin: userId,
+      description,
+      location,
+      photo: req.imageFileName,
+    });
 
     res.status(200).json({
       status: 'success',
@@ -40,6 +47,7 @@ export const getGroup = catchAsync(
     const { id } = req.params;
     const group = await Group.findById(id);
     if (!group) return next(new AppError('Group not found', 404));
+    await group.populate({ path: 'admin' });
     res.status(200).json({
       status: 'success',
       group,
@@ -69,6 +77,25 @@ export const joinGroup = catchAsync(
       { new: true }
     );
     if (!group) return next(new AppError('Group not found', 404));
+    await group.populate({ path: 'admin' });
+    res.status(200).json({
+      status: 'success',
+      group,
+    });
+  }
+);
+
+export const leaveGroup = catchAsync(
+  async (req: UserRequest, res: Response, next: NextFunction) => {
+    const userId: string = req.user.id;
+    const { name } = req.params;
+    const group = await Group.findOneAndUpdate(
+      { slug: name },
+      { $pull: { users: userId } },
+      { new: true }
+    );
+    if (!group) return next(new AppError('Group not found', 404));
+    await group.populate({ path: 'admin' });
     res.status(200).json({
       status: 'success',
       group,
@@ -127,10 +154,26 @@ export const checkIfUserBelongToTheGroup = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {
     const groupId = req.params.id;
     const userId = req.user.id;
+    const isAdmin = await Group.findOne({ _id: groupId, admin: userId });
+    if (isAdmin) {
+      return next();
+    }
     const group = await Group.findOne({ _id: groupId, users: userId });
     if (!group)
       return next(new AppError('You donot have any access to this group', 400));
 
     next();
+  }
+);
+
+export const getAllJoinedGroup = catchAsync(
+  async (req: UserRequest, res: Response, next: NextFunction) => {
+    const userId = req.user.id;
+    const groups = await Group.find({ users: userId });
+
+    res.status(200).json({
+      status: 'success',
+      groups,
+    });
   }
 );

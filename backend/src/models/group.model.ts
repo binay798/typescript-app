@@ -3,7 +3,9 @@ import slugify from 'slugify';
 
 export interface Group extends mongoose.Document {
   name: string;
+  description: string;
   status: string;
+  location: string;
   admin: {
     type: mongoose.Types.ObjectId;
     ref: 'User';
@@ -22,6 +24,14 @@ const groupSchema = new mongoose.Schema<Group>(
       type: String,
       required: [true, 'Must contain name'],
       unique: true,
+    },
+    description: {
+      type: String,
+      required: [true, 'Must contain description'],
+    },
+    location: {
+      type: String,
+      required: [true, 'Must contain location'],
     },
     status: {
       type: String,

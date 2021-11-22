@@ -29,3 +29,5 @@ router.post(
   checkIfUserBelongToTheGroup,
   groupPostController.createGroupPostComment
 );
+
+router.get('/:postId/comments', protectRoutes, groupPostController.getComments);

@@ -3,8 +3,15 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
 export interface UserSchema extends mongoose.Document {
+  firstname: string;
+  lastname: string;
   username: string;
   email: string;
+  permanentAddress: string;
+  temporaryAddress: string;
+  mobile: number;
+  highSchool: string;
+  college: string;
   password: string;
   confirmPassword: string | undefined;
   photo: string;
@@ -21,15 +28,38 @@ export interface UserSchema extends mongoose.Document {
 
 const userSchema = new mongoose.Schema<UserSchema>(
   {
-    username: {
+    firstname: {
       type: String,
       required: [true, 'Must contain firstname'],
+    },
+    lastname: {
+      type: String,
+      required: [true, 'Must contain firstname'],
+    },
+    username: {
+      type: String,
+      required: [true, 'Must contain username'],
       unique: true,
     },
     email: {
       type: String,
       required: [true, 'Must contain email'],
       unique: true,
+    },
+    permanentAddress: {
+      type: String,
+    },
+    temporaryAddress: {
+      type: String,
+    },
+    mobile: {
+      type: Number,
+    },
+    highSchool: {
+      type: String,
+    },
+    college: {
+      type: String,
     },
     password: {
       type: String,

@@ -20,10 +20,7 @@ const groupPostSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    likes: {
-      type: Number,
-      default: 0,
-    },
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
     author: {
       type: mongoose.Types.ObjectId,
       ref: 'User',

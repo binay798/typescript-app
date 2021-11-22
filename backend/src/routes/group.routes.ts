@@ -10,7 +10,18 @@ export const router = express.Router();
 router
   .route('/')
   .get(groupController.getAllGroups)
-  .post(protectRoutes, groupController.createGroup);
+  .post(
+    protectRoutes,
+    upload.single('image'),
+    createImage,
+    groupController.createGroup
+  );
+
+router.get(
+  '/get-joined-groups',
+  protectRoutes,
+  groupController.getAllJoinedGroup
+);
 
 router
   .route('/:id')
@@ -27,6 +38,8 @@ router
   );
 
 router.post('/:name/join', protectRoutes, groupController.joinGroup);
+router.post('/:name/leave', protectRoutes, groupController.leaveGroup);
+
 router.patch(
   '/:id/update-photo',
   protectRoutes,

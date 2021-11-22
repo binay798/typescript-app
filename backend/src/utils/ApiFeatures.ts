@@ -54,6 +54,7 @@ export class ApiFeatures {
     return this;
   }
 
+  // NEEDS TO BE REFACTORED FOR GETTING SELECTED FIELDS
   populate() {
     if (this.queryObj.populate) {
       const populatedText: string = this.queryObj.populate as string;

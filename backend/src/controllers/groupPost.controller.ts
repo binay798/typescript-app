@@ -7,7 +7,9 @@ import { Comment } from './../models/comment.model';
 
 export const getAllGroupPost = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {
-    const posts = await GroupPost.find({ group: req.params.id });
+    const posts = await GroupPost.find({ group: req.params.id }).populate({
+      path: 'author',
+    });
     res.status(200).json({
       status: 'success',
       posts,
@@ -83,6 +85,19 @@ export const deleteGroupPost = catchAsync(
   }
 );
 
+export const getComments = catchAsync(
+  async (req: UserRequest, res: Response, next: NextFunction) => {
+    const postId = req.params.postId;
+    const post = await GroupPost.findById(postId);
+    if (!post) return next(new AppError('Post not found', 404));
+    await post.populate({ path: 'comments' });
+    res.status(200).json({
+      status: 'success',
+      comments: post.comments,
+    });
+  }
+);
+
 export const createGroupPostComment = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {
     const { text } = req.body;
@@ -101,6 +116,8 @@ export const createGroupPostComment = catchAsync(
       },
       { new: true }
     );
-    res.status(200).json({ status: 'success', post });
+    if (!post) return next(new AppError('Post not found', 404));
+    await post.populate({ path: 'comments' });
+    res.status(200).json({ status: 'success', comments: post.comments });
   }
 );

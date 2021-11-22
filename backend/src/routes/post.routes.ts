@@ -26,4 +26,8 @@ router
 // FOR COMMENTS
 router.use('/:id/comments', commentRoutes);
 
-router.patch('/:postId/modify-like/:type', postController.modifyPostLikes);
+router.patch(
+  '/:postId/modify-like/:type',
+  authController.protectRoutes,
+  postController.modifyPostLikes
+);

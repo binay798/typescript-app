@@ -3,22 +3,19 @@ import { Comment } from './../models/comment.model';
 import { catchAsync } from '../utils/catchAsync';
 import { Post } from '../models/post.model';
 import { UserRequest } from './auth.controller';
-import { ApiFeatures } from '../utils/ApiFeatures';
+import { AppError } from './../utils/AppError';
 
 export const getComments = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const postId = req.params.id;
-    const query = new ApiFeatures(Post.find({ id: postId }), req.query)
-      .filter()
-      .fields()
-      .sort()
-      .pagination()
-      .populate();
-    const comments = await query.query;
+    const post = await Post.findById(postId);
+
+    if (!post) return next(new AppError('Post not found', 404));
+    await post.populate({ path: 'comments' });
 
     res.status(200).json({
       status: 'success',
-      comments: comments[0],
+      comments: post.comments,
     });
   }
 );
@@ -36,9 +33,13 @@ export const createComment = catchAsync(
       },
       { new: true }
     );
+    if (!post)
+      return next(new AppError('Post not updated while commenting', 404));
+    await post.populate({ path: 'comments' });
+
     res.status(200).json({
       status: 'success',
-      post,
+      comments: post.comments,
     });
   }
 );

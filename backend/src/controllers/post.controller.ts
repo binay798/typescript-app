@@ -13,7 +13,10 @@ export const createPost = catchAsync(
       photo: req.imageFileName,
       author: req.user.id,
     });
-
+    await post.populate({
+      path: 'author',
+      select: 'firstname lastname photo',
+    });
     res.status(200).json({
       status: 'success',
       post,
@@ -27,7 +30,8 @@ export const getAllPosts = catchAsync(
       .filter()
       .fields()
       .sort()
-      .pagination();
+      .pagination()
+      .populate();
 
     const posts = await query.query;
     res.status(200).json({
@@ -63,10 +67,9 @@ export const updatePost = catchAsync(
     const post = await Post.findOneAndUpdate(
       { _id: id, author: userId },
       reqBody,
-      {
-        new: true,
-      }
+      { new: true }
     );
+
     if (!post) return next(new AppError('Not authorized', 401));
 
     res.status(200).json({
@@ -90,21 +93,21 @@ export const deletePost = catchAsync(
 );
 
 export const modifyPostLikes = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: UserRequest, res: Response, next: NextFunction) => {
     const { type, postId } = req.params;
     let post;
     if (type === 'like') {
       // LIKE POST
       post = Post.findByIdAndUpdate(
         postId,
-        { $inc: { likes: 1 } },
+        { $addToSet: { likes: req.user.id } },
         { new: true }
       );
     } else if (type === 'dislike') {
       // UNLIKE POST
       post = Post.findByIdAndUpdate(
         postId,
-        { $inc: { likes: -1 } },
+        { $pull: { likes: req.user.id } },
         { new: true }
       );
     }
