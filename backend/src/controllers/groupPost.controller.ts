@@ -10,12 +10,14 @@ export const getAllGroupPost = catchAsync(
     const posts = await GroupPost.find({ group: req.params.id }).populate({
       path: 'author',
     });
+
     res.status(200).json({
       status: 'success',
       posts,
     });
   }
 );
+
 export const createGroupPost = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {
     const { title, description } = req.body;
@@ -119,5 +121,33 @@ export const createGroupPostComment = catchAsync(
     if (!post) return next(new AppError('Post not found', 404));
     await post.populate({ path: 'comments' });
     res.status(200).json({ status: 'success', comments: post.comments });
+  }
+);
+
+export const modifyPostLikes = catchAsync(
+  async (req: UserRequest, res: Response, next: NextFunction) => {
+    const { type, postId } = req.params;
+    let post;
+    if (type === 'like') {
+      // LIKE POST
+      post = GroupPost.findByIdAndUpdate(
+        postId,
+        { $addToSet: { likes: req.user.id } },
+        { new: true }
+      );
+    } else if (type === 'dislike') {
+      // UNLIKE POST
+      post = GroupPost.findByIdAndUpdate(
+        postId,
+        { $pull: { likes: req.user.id } },
+        { new: true }
+      );
+    }
+    post = await post;
+
+    res.status(200).json({
+      status: 'success',
+      post,
+    });
   }
 );

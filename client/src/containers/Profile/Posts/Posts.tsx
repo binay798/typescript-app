@@ -7,8 +7,8 @@ import {
   ListItemIcon,
   Button,
   Box,
+  CircularProgress,
 } from '@mui/material';
-import * as images from './../../../utils/images';
 
 import AddPost from '../../../components/AddPost/AddPost';
 import * as classes from './Posts.style';
@@ -19,19 +19,23 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
 import { Link } from 'react-router-dom';
-import { purple, blueGrey } from '@mui/material/colors';
+import { purple } from '@mui/material/colors';
 import Post from '../../../components/Post/Post';
 import axios from '../../../axiosInstance';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/Store';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
+import { baseUrl } from '../../../axiosInstance';
+import { User } from '../../../store/reducers/auth.reducer';
 
 function Posts(): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
   const [posts, setPosts] = useState<SinglePost[] | null>(null);
+  const [loading, setLoading] = useState(false);
   // GET YOUR POST
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
         if (!state.user) return;
         const authorId = state.user._id;
@@ -42,6 +46,7 @@ function Posts(): JSX.Element {
       } catch (err) {
         console.log(err);
       }
+      setLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -49,10 +54,9 @@ function Posts(): JSX.Element {
     <Grid container spacing={2}>
       <Grid item sm={5}>
         <Stack direction='column' spacing={2}>
-          <Intro />
+          <Intro authorId={state.user?._id} />
 
-          <Photos />
-          <Friends />
+          <Photos posts={posts} />
         </Stack>
       </Grid>
       <Grid item sm={7}>
@@ -60,18 +64,45 @@ function Posts(): JSX.Element {
 
         {/* ALL POSTS */}
         <Stack direction='column' sx={{ margin: '2rem auto' }} spacing={4}>
+          {loading && (
+            <Stack
+              direction='row'
+              alignItems='center'
+              justifyContent='center'
+              spacing={1}
+            >
+              <CircularProgress />
+              <Typography variant='body2' color='secondary'>
+                Loading...
+              </Typography>
+            </Stack>
+          )}
           {posts &&
             posts.map((el) => {
               return <Post data={el} key={el._id} />;
             })}
+
+          {posts?.length === 0 && (
+            <Typography
+              color='secondary'
+              variant='body1'
+              sx={{ textAlign: 'center' }}
+              display='block'
+            >
+              No posts to show
+            </Typography>
+          )}
         </Stack>
       </Grid>
     </Grid>
   );
 }
 
-function Photos(): JSX.Element {
-  const photos = [...images.person];
+interface PhotosProps {
+  posts: SinglePost[] | null;
+}
+
+function Photos(props: PhotosProps): JSX.Element {
   return (
     <Paper sx={classes.paper}>
       <Stack
@@ -90,23 +121,44 @@ function Photos(): JSX.Element {
       </Stack>
       {/* PHOTOS */}
       <Box sx={classes.photoContainer}>
-        {photos.map((el, id) => {
-          return (
-            <Box key={id}>
-              <img
-                style={{ display: 'block', width: '100%', cursor: 'pointer' }}
-                src={el}
-                alt='hello'
-              />
-            </Box>
-          );
-        })}
+        {props.posts?.length === 0 && (
+          <Typography color='secondary' variant='caption' display='block'>
+            No photos to show
+          </Typography>
+        )}
+        {props.posts &&
+          props.posts.map((el, id) => {
+            return (
+              <Box key={id}>
+                <img
+                  style={{ display: 'block', width: '100%', cursor: 'pointer' }}
+                  src={`${baseUrl}/static/images/${el.photo}`}
+                  alt='hello'
+                />
+              </Box>
+            );
+          })}
       </Box>
     </Paper>
   );
 }
 
-function Intro(): JSX.Element {
+interface IntroProps {
+  authorId: string | undefined;
+}
+function Intro(props: IntroProps): JSX.Element {
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!props.authorId) return;
+        const res = await axios.get(`/api/v1/users/${props.authorId}`);
+        setUser(res.data.user);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [props.authorId]);
   return (
     <Paper sx={classes.paper}>
       <Typography variant='h6' gutterBottom component='div'>
@@ -122,7 +174,7 @@ function Intro(): JSX.Element {
               <Typography variant='body2'>
                 Went to
                 <span style={{ fontWeight: 600, display: 'block' }}>
-                  Amrit Science Campus
+                  {user?.college}
                 </span>
               </Typography>
             }
@@ -137,7 +189,7 @@ function Intro(): JSX.Element {
               <Typography variant='body2'>
                 Went to
                 <span style={{ fontWeight: 600, display: 'block' }}>
-                  Everest Innovative College
+                  {user?.highSchool}
                 </span>
               </Typography>
             }
@@ -152,7 +204,7 @@ function Intro(): JSX.Element {
               <Typography variant='body2'>
                 Lives in
                 <span style={{ fontWeight: 600, display: 'block' }}>
-                  Kathmandu,Nepal
+                  {user?.temporaryAddress}
                 </span>
               </Typography>
             }
@@ -167,7 +219,7 @@ function Intro(): JSX.Element {
               <Typography variant='body2'>
                 From
                 <span style={{ fontWeight: 600, display: 'block' }}>
-                  Kathmandu, Nepal
+                  {user?.permanentAddress}
                 </span>
               </Typography>
             }
@@ -175,60 +227,6 @@ function Intro(): JSX.Element {
         </ListItem>
       </List>
     </Paper>
-  );
-}
-function Friends(): JSX.Element {
-  return (
-    <Paper sx={classes.paper}>
-      <Stack
-        direction='row'
-        sx={{ marginBottom: '1rem' }}
-        justifyContent='space-between'
-        alignItems='center'
-      >
-        <Typography variant='h6'>Friends</Typography>
-        <Link
-          style={{ color: purple[700], textDecoration: 'none' }}
-          to='/profile/photos'
-        >
-          <Button>See all friends</Button>
-        </Link>
-      </Stack>
-
-      {/* FRIENDS */}
-      <Box sx={classes.photoContainer}>
-        <FriendCard img={images.person[1]} name='John smith' />
-        <FriendCard img={images.person[1]} name='John smith' />
-
-        <FriendCard img={images.person[1]} name='John smith' />
-
-        <FriendCard img={images.person[1]} name='John smith' />
-      </Box>
-    </Paper>
-  );
-}
-
-interface FriendCardProps {
-  img: string;
-  name: string;
-}
-
-function FriendCard(props: FriendCardProps): JSX.Element {
-  return (
-    <Stack direction='column'>
-      <img
-        style={{ ...classes.img, borderRadius: '1rem' }}
-        src={props.img}
-        alt={props.name}
-      />
-      <Typography
-        style={{ fontWeight: 600, marginTop: '.5rem' }}
-        variant='caption'
-        color={blueGrey[200]}
-      >
-        {props.name}
-      </Typography>
-    </Stack>
   );
 }
 

@@ -29,5 +29,9 @@ router.post(
   checkIfUserBelongToTheGroup,
   groupPostController.createGroupPostComment
 );
-
+router.patch(
+  '/:postId/:type',
+  protectRoutes,
+  groupPostController.modifyPostLikes
+);
 router.get('/:postId/comments', protectRoutes, groupPostController.getComments);

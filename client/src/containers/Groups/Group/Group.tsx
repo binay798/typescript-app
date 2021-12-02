@@ -17,6 +17,7 @@ import {
   TextField,
   Divider,
   Modal,
+  CircularProgress,
 } from '@mui/material';
 import { person } from '../../../utils/images';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -32,6 +33,7 @@ import * as actionCreators from '../../../store/actionCreators/index';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import CloseIcon from '@mui/icons-material/Close';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
+import GroupPost from '../../../components/GroupPost/GroupPost';
 
 export const groupPhotoContainer = {
   height: '35rem',
@@ -47,9 +49,11 @@ function Group() {
   const state = useSelector((state: RootState) => state.group);
   const dispatch = useDispatch();
   const params = useParams();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
         let res = await axios.get(`/api/v1/groups/${params.id}`);
         dispatch({
@@ -59,10 +63,27 @@ function Group() {
       } catch (err) {
         console.log(err);
       }
+      setLoading(false);
     })();
   }, [params.id, dispatch]);
   if (!state.selectedGroup) {
     return <div>Loading...</div>;
+  }
+  if (loading) {
+    return (
+      <Stack
+        direction='row'
+        justifyContent='center'
+        alignItems='center'
+        spacing={2}
+        sx={{ paddingTop: '5rem' }}
+      >
+        <CircularProgress />
+        <Typography variant='body2' color='secondary'>
+          Loading...
+        </Typography>
+      </Stack>
+    );
   }
   return (
     <Box>
@@ -141,20 +162,17 @@ function GroupContainer(props: GroupContainerProps): JSX.Element {
       }
     })();
   }, [props.group._id]);
+
   return (
     <Grid container sx={groupMainContainer} spacing={3}>
       <Grid item sm={7}>
         <Box>
           <CreateNewGroupPost />
           <Stack direction='column' sx={{ marginTop: '3rem' }} spacing={3}>
-            {/* <Post />
-            <Post />
-            <Post />
-            <Post /> */}
-            {/* {posts &&
+            {posts &&
               posts.map((el: SinglePost) => {
-                return <Post  key={el._id} data={el} />;
-              })} */}
+                return <GroupPost key={el._id} data={el} />;
+              })}
           </Stack>
         </Box>
       </Grid>

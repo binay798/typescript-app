@@ -112,7 +112,11 @@ export const modifyPostLikes = catchAsync(
       );
     }
     post = await post;
-    console.log(post);
+    if (!post) return next(new AppError('Post not found', 404));
+    await post.populate({
+      path: 'author',
+      select: 'firstname lastname photo',
+    });
 
     res.status(200).json({
       status: 'success',

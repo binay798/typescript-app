@@ -79,6 +79,7 @@ function CreatePostModal(props: CreatePostModalProps): JSX.Element {
 
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+    console.log('file add post.tsx');
     const reader = new FileReader();
     if (!files) return;
     setFile(files[0]);

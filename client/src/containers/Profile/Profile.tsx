@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
   Avatar,
-  AvatarGroup,
   Badge,
   Box,
   Button,
@@ -18,7 +17,6 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { blueGrey } from '@mui/material/colors';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import styles from './Profile.module.css';
-import { person } from './../../utils/images';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import * as actionCreators from './../../store/actionCreators/index';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,6 +36,7 @@ function Profile(): JSX.Element {
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
+    console.log('file', 'profile.tsx');
     setFile(files[0]);
     setOpen(true);
   };
@@ -108,16 +107,9 @@ function Profile(): JSX.Element {
               >
                 {state.user?.firstname} {state.user?.lastname}
               </Typography>
-              <Typography variant='h6' color={blueGrey[100]} component='div'>
+              {/* <Typography variant='h6' color={blueGrey[100]} component='div'>
                 72 mutual friends
-              </Typography>
-              <AvatarGroup max={4}>
-                <Avatar alt='Remy Sharp' src={person[0]} />
-                <Avatar alt='Travis Howard' src={person[1]} />
-                <Avatar alt='Cindy Baker' src={person[2]} />
-                <Avatar alt='Agnes Walker' src={person[3]} />
-                <Avatar alt='Trevor Henderson' src={person[4]} />
-              </AvatarGroup>
+              </Typography> */}
             </Stack>
             <Link style={{ textDecoration: 'none' }} to='/profile/edit'>
               <Button variant='contained' color='primary'>

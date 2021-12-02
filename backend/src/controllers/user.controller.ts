@@ -22,6 +22,18 @@ export const getAllUsers = catchAsync(
   }
 );
 
+export const getUser = catchAsync(
+  async (req: UserRequest, res: Response, next: NextFunction) => {
+    const user = await User.findById(req.params.id);
+    if (!user) return next(new AppError('User not found', 404));
+
+    res.status(200).json({
+      status: 'success',
+      user,
+    });
+  }
+);
+
 // UPDATE USERS
 export const updateUser = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {

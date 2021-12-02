@@ -1,4 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
+
 import {
   Avatar,
   Button,
@@ -10,68 +11,52 @@ import {
   IconButton,
   Stack,
   Typography,
-  Box,
   TextField,
   CircularProgress,
-  InputAdornment,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { red, blue } from '@mui/material/colors';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import { blue } from '@mui/material/colors';
-import { Post as SinglePost } from '../../store/reducers/post.reducer';
-import { baseUrl } from './../../axiosInstance';
-import moment from 'moment';
+import { Box } from '@mui/system';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
-import { User } from '../../store/reducers/auth.reducer';
 import axios from '../../axiosInstance';
+import { User } from '../../store/reducers/auth.reducer';
+import { baseUrl } from './../../axiosInstance';
+import moment from 'moment';
+import { Post as SinglePost } from '../../store/reducers/post.reducer';
 
 interface PostProps {
   data: SinglePost;
 }
-function Post(props: PostProps): JSX.Element {
-  const [post, setPost] = useState<SinglePost>(props.data);
-  const state = useSelector((state: RootState) => state.auth);
-  const [isLiked, setIsLiked] = useState(false);
-  const [loading, setLoading] = useState(false);
+function GroupPost(props: PostProps) {
+  const [post, setPost] = useState(props.data);
+  const group = useSelector((state: RootState) => state.group);
   const [openCommentBox, setOpenCommentBox] = useState(false);
-
-  useEffect(() => {
-    if (!state.user) return;
-    const existUser = post.likes.find((el) => el === state.user?._id);
-    if (existUser) {
-      setIsLiked(true);
-    } else {
-      setIsLiked(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [post.likes]);
+  const [isLiked, setIsLiked] = useState(false);
 
   const modifyLike = async () => {
-    setLoading(true);
     try {
-      let res = await axios.patch<{ post: SinglePost }>(
-        `api/v1/posts/${post._id}/modify-like/${isLiked ? 'dislike' : 'like'}`
+      const res = await axios.patch(
+        `/api/v1/groups/${group.selectedGroup?._id}/group-post/${post._id}/${
+          isLiked ? 'dislike' : 'like'
+        }`
       );
       setPost(res.data.post);
       setIsLiked((prev) => !prev);
     } catch (err) {
       console.log(err);
     }
-    setLoading(false);
   };
+  console.log(post);
 
   return (
     <Card>
       <CardHeader
         avatar={
-          <Avatar
-            src={`${baseUrl}/static/images/${post.author.photo}`}
-            sx={{ bgcolor: 'red' }}
-            aria-label='recipe'
-          >
+          <Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
             R
           </Avatar>
         }
@@ -80,27 +65,31 @@ function Post(props: PostProps): JSX.Element {
             <MoreVertIcon />
           </IconButton>
         }
-        title={`${post.author.firstname} ${post.author.lastname}`}
-        subheader={moment(post.createdAt).fromNow()}
+        title='Shrimp and Chorizo Paella'
+        subheader='September 14, 2016'
       />
       <CardMedia
         component='img'
-        sx={{ width: '100%', objectFit: 'contain' }}
         image={`${baseUrl}/static/images/${post.photo}`}
+        sx={{ width: '100%', objectFit: 'contain' }}
         alt='Paella dish'
       />
       <CardContent>
         <Typography variant='body2' color='text.secondary'>
-          {post.description}
+          This impressive paella is a perfect party dish and a fun meal to cook
+          together with your guests. Add 1 cup of frozen peas along with the
+          mussels, if you like.
         </Typography>
       </CardContent>
+
+      {/* LIKES AND COMMENT BTN */}
       <Stack
         direction='row'
         sx={{ padding: '0 2rem' }}
-        justifyContent='space-between'
         alignItems='center'
+        justifyContent='space-between'
       >
-        <Stack direction='row' spacing={1} alignItems='center'>
+        <Stack direction='row' spacing={1}>
           <Avatar sx={{ width: 24, height: 24, backgroundColor: blue[500] }}>
             <ThumbUpOutlinedIcon
               color='action'
@@ -108,7 +97,7 @@ function Post(props: PostProps): JSX.Element {
             />
           </Avatar>
           <Typography variant='body2' color='text.secondary'>
-            {post.likes.length} likes
+            321 likes
           </Typography>
         </Stack>
 
@@ -118,7 +107,6 @@ function Post(props: PostProps): JSX.Element {
           </Button>
         </Typography>
       </Stack>
-      {/* LIKE AND COMMENT  */}
       <Box sx={{ padding: '2rem' }}>
         <Divider sx={{ borderColor: 'var(--divider)' }} />
         <Stack
@@ -128,11 +116,10 @@ function Post(props: PostProps): JSX.Element {
         >
           <Button
             onClick={modifyLike}
-            startIcon={isLiked ? <ThumbUpAltIcon /> : <ThumbUpOutlinedIcon />}
+            startIcon={<ThumbUpAltIcon />}
             sx={{ flex: 1 }}
-            disabled={loading}
           >
-            {isLiked ? 'Liked' : 'Like'}
+            Like
           </Button>
           <Button
             startIcon={<ChatBubbleOutlineOutlinedIcon />}
@@ -144,7 +131,6 @@ function Post(props: PostProps): JSX.Element {
         </Stack>
         <Divider sx={{ borderColor: 'var(--divider)' }} />
       </Box>
-
       {openCommentBox ? (
         <Suspense fallback='loading...'>
           <CommentBox postId={post._id} />
@@ -163,21 +149,21 @@ interface CommentState {
 interface CommentProps {
   postId: string;
 }
-
 function CommentBox(props: CommentProps): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
   const group = useSelector((state: RootState) => state.group);
   const [comments, setComments] = useState<CommentState[] | null>(null);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [createCommentLoading, setCreateCommentLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
 
-        let res = await axios.get(`/api/v1/posts/${props.postId}/comments`);
+        let res = await axios.get(
+          `/api/v1/groups/${group.selectedGroup?._id}/group-post/${props.postId}/comments`
+        );
         setComments([...res.data.comments]);
       } catch (err) {
         console.log(err);
@@ -189,17 +175,18 @@ function CommentBox(props: CommentProps): JSX.Element {
   const createComment = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (text === '') return;
-    setCreateCommentLoading(true);
     try {
-      let res = await axios.post(`/api/v1/posts/${props.postId}/comments`, {
-        text,
-      });
+      let res = await axios.post(
+        `/api/v1/groups/${group.selectedGroup?._id}/group-post/${props.postId}/comment`,
+        {
+          text,
+        }
+      );
       setText('');
       setComments([...res.data.comments]);
     } catch (err) {
       console.log(err);
     }
-    setCreateCommentLoading(false);
   };
 
   return (
@@ -216,13 +203,6 @@ function CommentBox(props: CommentProps): JSX.Element {
             label='Write comment...'
             value={text}
             onChange={(e) => setText(e.target.value)}
-            InputProps={{
-              endAdornment: createCommentLoading ? (
-                <InputAdornment position='end'>
-                  <CircularProgress size={20} />
-                </InputAdornment>
-              ) : null,
-            }}
           />
         </Stack>
       </form>
@@ -298,4 +278,5 @@ function CommentBox(props: CommentProps): JSX.Element {
     </Box>
   );
 }
-export default Post;
+
+export default GroupPost;

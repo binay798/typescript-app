@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Typography, Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Typography, Box, CircularProgress } from '@mui/material';
 import GroupCard from '../../../components/GroupCard/GroupCard';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from '../../../axiosInstance';
@@ -16,8 +16,11 @@ const groupContainer = {
 function GroupMain(): JSX.Element {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.group);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
+      if (state.groups.length !== 0) return;
+      setLoading(true);
       try {
         let res = await axios.get('/api/v1/groups');
         dispatch({
@@ -27,7 +30,9 @@ function GroupMain(): JSX.Element {
       } catch (err) {
         console.log(err);
       }
+      setLoading(false);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   return (
     <Box sx={{ padding: '2rem 8rem' }}>
@@ -47,6 +52,7 @@ function GroupMain(): JSX.Element {
       </Typography>
 
       <Box sx={groupContainer}>
+        {loading && <CircularProgress />}
         {state.groups.map((el, id) => {
           return <GroupCard key={id} data={el} />;
         })}

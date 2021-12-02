@@ -1,26 +1,29 @@
-import { Grid, Box, Stack } from '@mui/material';
+import { useState } from 'react';
+import { Grid, Box, Stack, CircularProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import * as classes from './Homepage.style';
 import HomepageLeftSection from './HomepageLeftSection/HomepageLeftSection';
 import HomepageRightSection from './HomepageRightSection/HomepageRightSection';
 import Post from './../../components/Post/Post';
 import AddPost from '../../components/AddPost/AddPost';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './../../store/Store';
+
 import axios from '../../axiosInstance';
-import * as Actions from './../../store/actions/index';
+import { Post as SinglePost } from '../../store/reducers/post.reducer';
 
 function Homepage(): JSX.Element {
-  const state = useSelector((state: RootState) => state.post);
-  const dispatch = useDispatch();
+  const [posts, setPosts] = useState<SinglePost[]>([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
-        if (state.posts.length !== 0) return;
+        if (posts.length !== 0) return;
         let res = await axios.get('/api/v1/posts?limit=5&populate=author');
-        dispatch({ type: Actions.PostAction.GET_POSTS, payload: res.data });
+        setPosts(res.data.posts);
+        setLoading(false);
       } catch (err) {
         console.log(err);
+        setLoading(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,9 +46,24 @@ function Homepage(): JSX.Element {
           <AddPost />
           {/* POSTS */}
 
+          {loading ? (
+            <Stack
+              sx={{ padding: '2rem' }}
+              direction='row'
+              alignItems='center'
+              justifyContent='center'
+              spacing={1}
+            >
+              <CircularProgress />
+              <Typography variant='body2' color='secondary'>
+                Loading...
+              </Typography>
+            </Stack>
+          ) : null}
+
           <Stack spacing={8} sx={{ margin: '0 auto', marginTop: '3rem' }}>
-            {state.posts.length !== 0 &&
-              state.posts.map((el, id) => {
+            {posts.length !== 0 &&
+              posts.map((el, id) => {
                 return <Post key={id} data={el} />;
               })}
           </Stack>

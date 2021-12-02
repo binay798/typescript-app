@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Box,
@@ -11,6 +11,7 @@ import {
   ListItemButton,
   ListItemText,
   ListItemIcon,
+  CircularProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -48,8 +49,10 @@ const img = {
 function Groups() {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.group);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
         let res = await axios.get('/api/v1/groups');
         dispatch({
@@ -59,6 +62,7 @@ function Groups() {
       } catch (err) {
         console.log(err);
       }
+      setLoading(false);
     })();
   }, [dispatch]);
   return (
@@ -102,7 +106,11 @@ function Groups() {
           </Link>
 
           {/* GROUPS THAT YOU HAVE JOINED */}
-          <YourGroupList groups={state.groups} />
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <YourGroupList groups={state.groups} />
+          )}
         </Box>
       </Grid>
       <Grid item sm={9}>
