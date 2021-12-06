@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import { User } from '../../store/reducers/auth.reducer';
 import axios from '../../axiosInstance';
+import axiosMain from 'axios';
 
 interface PostProps {
   data: SinglePost;
@@ -173,17 +174,24 @@ function CommentBox(props: CommentProps): JSX.Element {
   const [createCommentLoading, setCreateCommentLoading] = useState(false);
 
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       try {
         setLoading(true);
 
-        let res = await axios.get(`/api/v1/posts/${props.postId}/comments`);
+        let res = await axios.get(`/api/v1/posts/${props.postId}/comments`, {
+          cancelToken: cancelReq.token,
+        });
         setComments([...res.data.comments]);
       } catch (err) {
         console.log(err);
       }
       setLoading(false);
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
   }, [props.postId, group.selectedGroup]);
 
   const createComment = async (e: React.SyntheticEvent) => {

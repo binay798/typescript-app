@@ -9,44 +9,62 @@ import AddPost from '../../components/AddPost/AddPost';
 
 import axios from '../../axiosInstance';
 import { Post as SinglePost } from '../../store/reducers/post.reducer';
+import axiosMain from 'axios';
 
 function Homepage(): JSX.Element {
-  const [posts, setPosts] = useState<SinglePost[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState<SinglePost[] | null>(null);
+  // const [loading, setLoading] = useState(false);
   useEffect(() => {
+    const cancelToken = axiosMain.CancelToken.source();
     (async () => {
-      setLoading(true);
+      if (posts && posts.length !== 0) return;
+
+      // setLoading(true);
       try {
-        if (posts.length !== 0) return;
-        let res = await axios.get('/api/v1/posts?limit=5&populate=author');
+        let res = await axios.get('/api/v1/posts?limit=5&populate=author', {
+          cancelToken: cancelToken.token,
+        });
         setPosts(res.data.posts);
-        setLoading(false);
+        // setLoading(false);
       } catch (err) {
         console.log(err);
-        setLoading(false);
+        // setLoading(false);
       }
     })();
+    return () => {
+      cancelToken.cancel();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Grid container sx={classes.container} spacing={8}>
-      <Grid item sm={3}>
+    <Grid
+      container
+      justifyContent='space-between'
+      sx={classes.container}
+      columnSpacing={{ md: 8, xs: 1 }}
+    >
+      <Box
+        component={Grid}
+        item
+        md={3}
+        display={{ sm: 'none', md: 'block', xs: 'none' }}
+      >
         <HomepageLeftSection />
-      </Grid>
-      <Grid item sm={6}>
+      </Box>
+      <Grid item md={5} sm={8}>
         <Box
           sx={{
             margin: '0 auto',
             marginTop: '2rem',
             overflowY: 'scroll',
             height: '85vh',
-            width: '75%',
+            // width: '75%',
           }}
         >
           <AddPost />
           {/* POSTS */}
 
-          {loading ? (
+          {!posts ? (
             <Stack
               sx={{ padding: '2rem' }}
               direction='row'
@@ -62,16 +80,22 @@ function Homepage(): JSX.Element {
           ) : null}
 
           <Stack spacing={8} sx={{ margin: '0 auto', marginTop: '3rem' }}>
-            {posts.length !== 0 &&
+            {posts &&
               posts.map((el, id) => {
                 return <Post key={id} data={el} />;
               })}
           </Stack>
         </Box>
       </Grid>
-      <Grid item sm={3}>
+      <Box
+        component={Grid}
+        item
+        md={3}
+        sm={4}
+        display={{ md: 'block', xs: 'none', sm: 'block' }}
+      >
         <HomepageRightSection />
-      </Grid>
+      </Box>
     </Grid>
   );
 }

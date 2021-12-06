@@ -24,7 +24,7 @@ export const signup = catchAsync(
 
     // Send welcome email
     const emailInstance = new EmailConfig(
-      process.env.EMAIL_USERNAME,
+      process.env.EMAIL_USERNAME as string,
       user.email,
       {
         subject: 'Welcome to our website',
@@ -100,10 +100,14 @@ export const forgotPassword = catchAsync(
     user.save({ validateBeforeSave: false });
     // SEND RESET URL TO THE EMAIL
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    const emailInstance = new EmailConfig(process.env.EMAIL_USERNAME, email, {
-      url: resetUrl,
-      subject: 'Reset your password',
-    });
+    const emailInstance = new EmailConfig(
+      process.env.EMAIL_USERNAME as string,
+      email,
+      {
+        url: resetUrl,
+        subject: 'Reset your password',
+      }
+    );
     await emailInstance.passwordResetEmail();
 
     res.status(200).json({

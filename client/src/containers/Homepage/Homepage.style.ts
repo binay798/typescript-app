@@ -2,6 +2,7 @@ export const container = {
   minHeight: '100vh',
   backgroundColor: 'var(--body)',
   color: 'var(--light)',
+  padding: '1rem',
 };
 
 export const postBtn = {

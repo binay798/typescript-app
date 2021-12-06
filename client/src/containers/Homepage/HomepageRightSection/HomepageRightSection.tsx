@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Box,
   Avatar,
@@ -8,9 +9,32 @@ import {
   Typography,
   Button,
 } from '@mui/material';
-import * as images from './../../../utils/images';
+import axios, { baseUrl } from '../../../axiosInstance';
+import { User } from '../../../store/reducers/auth.reducer';
+import axiosMain from 'axios';
 
 function HomepageRightSection() {
+  const [users, setUsers] = useState<User[] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
+    (async () => {
+      // setLoading(true);
+      try {
+        const res = await axios.get('/api/v1/users?limit=10', {
+          cancelToken: cancelReq.token,
+        });
+        setUsers(res.data.users);
+      } catch (err) {
+        console.log(err);
+      }
+      // setLoading(false);
+    })();
+    return () => {
+      cancelReq.cancel();
+    };
+  }, []);
   return (
     <Box
       sx={{
@@ -35,36 +59,26 @@ function HomepageRightSection() {
         >
           People you may know
         </Typography>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.person[0]} alt='B' />
-          </ListItemIcon>
-          <ListItemText primary='Obama Riot' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.person[1]} alt='B' />
-          </ListItemIcon>
-          <ListItemText primary='Christine Smith' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.person[2]} alt='B' />
-          </ListItemIcon>
-          <ListItemText primary='Julia Mendosa' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.person[3]} alt='B' />
-          </ListItemIcon>
-          <ListItemText primary='Robert Smith' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.person[4]} alt='B' />
-          </ListItemIcon>
-          <ListItemText primary='Binay shrestha' />
-        </ListItemButton>
+        {!users && (
+          <Typography variant='body2' color='secondary' gutterBottom>
+            Loading...
+          </Typography>
+        )}
+        {users &&
+          users.map((el, id) => {
+            return (
+              <ListItemButton key={id}>
+                <ListItemIcon>
+                  <Avatar
+                    src={`${baseUrl}/static/images/${el.photo}`}
+                    alt='B'
+                  />
+                </ListItemIcon>
+                <ListItemText primary={`${el.firstname} ${el.lastname}`} />
+              </ListItemButton>
+            );
+          })}
+
         <Button sx={{ width: '95%' }} variant='contained'>
           See more users
         </Button>

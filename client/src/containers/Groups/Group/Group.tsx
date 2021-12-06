@@ -34,6 +34,7 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import CloseIcon from '@mui/icons-material/Close';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
 import GroupPost from '../../../components/GroupPost/GroupPost';
+import axiosMain from 'axios';
 
 export const groupPhotoContainer = {
   height: '35rem',
@@ -52,10 +53,13 @@ function Group() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       setLoading(true);
       try {
-        let res = await axios.get(`/api/v1/groups/${params.id}`);
+        let res = await axios.get(`/api/v1/groups/${params.id}`, {
+          cancelToken: cancelReq.token,
+        });
         dispatch({
           type: Actions.GroupAction.SELECT_GROUP,
           payload: { groups: [res.data.group] },
@@ -65,6 +69,10 @@ function Group() {
       }
       setLoading(false);
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
   }, [params.id, dispatch]);
   if (!state.selectedGroup) {
     return <div>Loading...</div>;
@@ -150,17 +158,26 @@ interface GroupContainerProps {
 
 function GroupContainer(props: GroupContainerProps): JSX.Element {
   const [posts, setPosts] = useState<SinglePost[] | null>(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
+      setLoading(true);
       try {
         const res = await axios.get(
-          `/api/v1/groups/${props.group._id}/group-post`
+          `/api/v1/groups/${props.group._id}/group-post`,
+          { cancelToken: cancelReq.token }
         );
         setPosts(res.data.posts);
       } catch (err) {
         console.log(err);
       }
+      setLoading(false);
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
   }, [props.group._id]);
 
   return (
@@ -169,6 +186,19 @@ function GroupContainer(props: GroupContainerProps): JSX.Element {
         <Box>
           <CreateNewGroupPost />
           <Stack direction='column' sx={{ marginTop: '3rem' }} spacing={3}>
+            {loading && (
+              <Stack
+                direction='row'
+                alignItems='center'
+                justifyContent='center'
+                spacing={1}
+              >
+                <CircularProgress />
+                <Typography variant='body2' color='secondary'>
+                  Loading...
+                </Typography>
+              </Stack>
+            )}
             {posts &&
               posts.map((el: SinglePost) => {
                 return <GroupPost key={el._id} data={el} />;
@@ -226,6 +256,7 @@ const style = {
   boxShadow: 24,
   p: 2,
 };
+
 function CreateNewGroupPost(): JSX.Element {
   const state = useSelector((state: RootState) => state.group);
   const [open, setOpen] = useState(false);

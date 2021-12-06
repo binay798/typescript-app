@@ -24,7 +24,18 @@ export class EmailConfig {
   constructor(public from: string, public to: string, public data: Data) {}
 
   async transporter() {
-    return await nodemailer.createTransport(this.transportOptions);
+    return await nodemailer.createTransport({
+      //@ts-ignore
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: true, // upgrade later with STARTTLS
+      requireTLS: true,
+      auth: {
+        user: process.env.EMAIL_USERNAME as string,
+        pass: process.env.EMAIL_PASS as string,
+      },
+      logger: true,
+    });
   }
 
   async sendEmail(html: string) {

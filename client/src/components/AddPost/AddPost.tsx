@@ -29,7 +29,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 450,
+  maxWidth: 450,
+  width: '100%',
   bgcolor: 'var(--appbar)',
   boxShadow: 24,
   p: 2,
@@ -181,10 +182,10 @@ function CreatePostModal(props: CreatePostModalProps): JSX.Element {
               >
                 Add Photo:
               </Typography>
-              <label htmlFor='icon-button-file'>
+              <label htmlFor='icon-button'>
                 <Input
                   sx={{ display: 'none' }}
-                  id='icon-button-file'
+                  id='icon-button'
                   type='file'
                   onChange={fileChangeHandler}
                 />

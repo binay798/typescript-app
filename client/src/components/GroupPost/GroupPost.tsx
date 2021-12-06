@@ -27,6 +27,7 @@ import { User } from '../../store/reducers/auth.reducer';
 import { baseUrl } from './../../axiosInstance';
 import moment from 'moment';
 import { Post as SinglePost } from '../../store/reducers/post.reducer';
+import axiosMain from 'axios';
 
 interface PostProps {
   data: SinglePost;
@@ -50,7 +51,6 @@ function GroupPost(props: PostProps) {
       console.log(err);
     }
   };
-  console.log(post);
 
   return (
     <Card>
@@ -65,8 +65,8 @@ function GroupPost(props: PostProps) {
             <MoreVertIcon />
           </IconButton>
         }
-        title='Shrimp and Chorizo Paella'
-        subheader='September 14, 2016'
+        title={`${post.author.firstname} ${post.author.lastname}`}
+        subheader={moment(post.createdAt).fromNow()}
       />
       <CardMedia
         component='img'
@@ -76,9 +76,7 @@ function GroupPost(props: PostProps) {
       />
       <CardContent>
         <Typography variant='body2' color='text.secondary'>
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {post.description}
         </Typography>
       </CardContent>
 
@@ -97,7 +95,7 @@ function GroupPost(props: PostProps) {
             />
           </Avatar>
           <Typography variant='body2' color='text.secondary'>
-            321 likes
+            {post.likes.length} likes
           </Typography>
         </Stack>
 
@@ -157,12 +155,14 @@ function CommentBox(props: CommentProps): JSX.Element {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       try {
         setLoading(true);
 
         let res = await axios.get(
-          `/api/v1/groups/${group.selectedGroup?._id}/group-post/${props.postId}/comments`
+          `/api/v1/groups/${group.selectedGroup?._id}/group-post/${props.postId}/comments`,
+          { cancelToken: cancelReq.token }
         );
         setComments([...res.data.comments]);
       } catch (err) {
@@ -170,6 +170,10 @@ function CommentBox(props: CommentProps): JSX.Element {
       }
       setLoading(false);
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
   }, [props.postId, group.selectedGroup]);
 
   const createComment = async (e: React.SyntheticEvent) => {

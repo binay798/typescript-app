@@ -7,11 +7,7 @@ import {
   TextField,
   InputAdornment,
   Button,
-  List,
-  ListItem,
-  ListItemButton,
   ListItemText,
-  ListItemIcon,
   Avatar,
   IconButton,
 } from '@mui/material';
@@ -29,8 +25,7 @@ const leftSideStyle = {
 
 const rightSideStyle = {
   background: 'var(--body)',
-  maxHeight: '100vh',
-  height: '100%',
+  height: '100vh',
   padding: '4rem',
 };
 
@@ -88,39 +83,6 @@ function LeftContainer(): JSX.Element {
           </Button>
         </Stack>
       </form>
-      {/* MY FRIENDS */}
-      <Typography
-        variant='body1'
-        color='secondary.light'
-        sx={{ fontWeight: 600, padding: '1rem' }}
-      >
-        Your Friends
-      </Typography>
-      {/* FRIEND LISTS */}
-      <List>
-        {person.map((el, id) => {
-          return (
-            <ListItem key={id} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Avatar src={el} alt='person' />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant='body1'
-                      sx={{ fontWeight: 600 }}
-                      color='secondary.light'
-                    >
-                      John Smith
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
     </Box>
   );
 }

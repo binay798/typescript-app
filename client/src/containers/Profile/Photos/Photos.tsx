@@ -5,24 +5,31 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/Store';
 import axios, { baseUrl } from '../../../axiosInstance';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
+import axiosMain from 'axios';
 
 function Photos() {
   const state = useSelector((state: RootState) => state.auth);
   const [posts, setPosts] = useState<SinglePost[] | null>(null);
   // GET YOUR POST
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       try {
         if (!state.user) return;
         const authorId = state.user._id;
         let res = await axios.get(
-          `/api/v1/posts?author=${authorId}&limit=5&populate=author&fields=photo`
+          `/api/v1/posts?author=${authorId}&limit=5&populate=author&fields=photo`,
+          { cancelToken: cancelReq.token }
         );
         setPosts(res.data.posts);
       } catch (err) {
         console.log(err);
       }
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -49,6 +56,7 @@ function Photos() {
           posts.map((el, id) => {
             return (
               <img
+                key={id}
                 style={classes.img}
                 src={`${baseUrl}/static/images/${el.photo}`}
                 alt='hello'

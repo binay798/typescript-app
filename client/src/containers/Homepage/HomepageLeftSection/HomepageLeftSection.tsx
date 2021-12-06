@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Box,
   Avatar,
@@ -13,13 +14,33 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Link } from 'react-router-dom';
-import * as images from './../../../utils/images';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/Store';
-import { baseUrl } from './../../../axiosInstance';
+import axios, { baseUrl } from '../../../axiosInstance';
+import { Group } from '../../../store/reducers/group.reducer';
+import axiosMain from 'axios';
 
 function HomepageLeftSection(): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
+  const [groups, setGroups] = useState<Group[] | null>(null);
+
+  useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
+    (async () => {
+      try {
+        const res = await axios.get('/api/v1/groups?limit=6', {
+          cancelToken: cancelReq.token,
+        });
+        setGroups(res.data.groups);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+
+    return () => {
+      cancelReq.cancel();
+    };
+  }, []);
   return (
     <Box
       sx={{
@@ -100,36 +121,26 @@ function HomepageLeftSection(): JSX.Element {
         >
           Recently added groups
         </Typography>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.groups[0]} alt='A' />
-          </ListItemIcon>
-          <ListItemText primary='Animal lovers' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.groups[1]} alt='A' />
-          </ListItemIcon>
-          <ListItemText primary='Aerospace' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.groups[2]} alt='A' />
-          </ListItemIcon>
-          <ListItemText primary='Meme group' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.groups[3]} alt='A' />
-          </ListItemIcon>
-          <ListItemText primary='Javascript Programming' />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={images.groups[4]} alt='A' />
-          </ListItemIcon>
-          <ListItemText primary='Technology' />
-        </ListItemButton>
+        {groups &&
+          groups.map((el, id) => {
+            return (
+              <Link
+                to={`/groups/${el._id}`}
+                key={id}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <ListItemButton key={id}>
+                  <ListItemIcon>
+                    <Avatar
+                      src={`${baseUrl}/static/images/${el.photo}`}
+                      alt='A'
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={el.name} />
+                </ListItemButton>
+              </Link>
+            );
+          })}
 
         <Button sx={{ margin: '2rem' }} variant='contained'>
           Explore more groups

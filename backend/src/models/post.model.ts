@@ -11,6 +11,7 @@ export interface PostSchema extends mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
   comments: [{ type: mongoose.Types.ObjectId; ref: 'Comment' }];
+  likes: [{ type: mongoose.Types.ObjectId; ref: 'User' }];
 }
 
 const postSchema = new mongoose.Schema<PostSchema>(

@@ -5,7 +5,9 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "start": "node build/server.js",
+    "start:dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +31,8 @@
     "nodemailer": "^6.7.0",
     "sharp": "^0.29.2",
     "slugify": "^1.6.2",
-    "ts-node-dev": "^1.1.8"
+    "ts-node-dev": "^1.1.8",
+    "tsc": "^2.0.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

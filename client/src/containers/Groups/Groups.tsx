@@ -12,6 +12,7 @@ import {
   ListItemText,
   ListItemIcon,
   CircularProgress,
+  Stack,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -24,6 +25,7 @@ import * as Actions from '../../store/actions/index';
 import { RootState } from '../../store/Store';
 import { Group } from '../../store/reducers/group.reducer';
 import { baseUrl } from '../../axiosInstance';
+import axiosMain from 'axios';
 
 const leftSideStyle = {
   background: 'var(--appbar)',
@@ -51,10 +53,13 @@ function Groups() {
   const state = useSelector((state: RootState) => state.group);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       setLoading(true);
       try {
-        let res = await axios.get('/api/v1/groups');
+        let res = await axios.get('/api/v1/groups?limit=5', {
+          cancelToken: cancelReq.token,
+        });
         dispatch({
           type: Actions.GroupAction.GET_GROUPS,
           payload: res.data,
@@ -64,10 +69,14 @@ function Groups() {
       }
       setLoading(false);
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
   }, [dispatch]);
   return (
     <Grid container>
-      <Grid item sm={3}>
+      <Box component={Grid} item sm={3}>
         <Box sx={{ ...leftSideStyle, overflowY: 'scroll' }}>
           <Typography
             color='secondary.light'
@@ -107,12 +116,19 @@ function Groups() {
 
           {/* GROUPS THAT YOU HAVE JOINED */}
           {loading ? (
-            <CircularProgress />
+            <Stack
+              sx={{ padding: '1rem 0' }}
+              direction='row'
+              alignItems='center'
+              justifyContent='center'
+            >
+              <CircularProgress />
+            </Stack>
           ) : (
             <YourGroupList groups={state.groups} />
           )}
         </Box>
-      </Grid>
+      </Box>
       <Grid item sm={9}>
         <Box
           sx={{

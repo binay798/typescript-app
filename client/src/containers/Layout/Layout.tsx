@@ -1,7 +1,6 @@
 import { AppBar, Button, Stack, Toolbar, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import * as classes from './Layout.style';
-import LoginIcon from '@mui/icons-material/Login';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { Link } from 'react-router-dom';
 import logo from './../../assets/logo.jpeg';
@@ -26,20 +25,18 @@ function Layout(): JSX.Element {
             </Link>
           </Typography>
           <Stack direction='row' spacing={2}>
-            <Button
-              startIcon={<LoginIcon />}
-              variant='contained'
-              color='primary'
+            <Link
+              to='/auth/signup'
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              Login
-            </Button>
-            <Button
-              startIcon={<VpnKeyIcon />}
-              variant='contained'
-              color='secondary'
-            >
-              Register
-            </Button>
+              <Button
+                startIcon={<VpnKeyIcon />}
+                variant='contained'
+                color='secondary'
+              >
+                Register
+              </Button>
+            </Link>
           </Stack>
         </Toolbar>
       </AppBar>

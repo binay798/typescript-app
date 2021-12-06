@@ -27,27 +27,34 @@ import { RootState } from '../../../store/Store';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
 import { baseUrl } from '../../../axiosInstance';
 import { User } from '../../../store/reducers/auth.reducer';
+import axiosMain from 'axios';
 
 function Posts(): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
   const [posts, setPosts] = useState<SinglePost[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // GET YOUR POST
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
-      setLoading(true);
+      // setLoading(true);
       try {
         if (!state.user) return;
         const authorId = state.user._id;
         let res = await axios.get(
-          `/api/v1/posts?author=${authorId}&limit=5&populate=author`
+          `/api/v1/posts?author=${authorId}&limit=5&populate=author`,
+          { cancelToken: cancelReq.token }
         );
         setPosts(res.data.posts);
       } catch (err) {
         console.log(err);
       }
-      setLoading(false);
+      // setLoading(false);
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -64,7 +71,7 @@ function Posts(): JSX.Element {
 
         {/* ALL POSTS */}
         <Stack direction='column' sx={{ margin: '2rem auto' }} spacing={4}>
-          {loading && (
+          {!posts && (
             <Stack
               direction='row'
               alignItems='center'
@@ -149,15 +156,22 @@ interface IntroProps {
 function Intro(props: IntroProps): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
+    const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       try {
         if (!props.authorId) return;
-        const res = await axios.get(`/api/v1/users/${props.authorId}`);
+        const res = await axios.get(`/api/v1/users/${props.authorId}`, {
+          cancelToken: cancelReq.token,
+        });
         setUser(res.data.user);
       } catch (err) {
         console.log(err);
       }
     })();
+
+    return () => {
+      cancelReq.cancel();
+    };
   }, [props.authorId]);
   return (
     <Paper sx={classes.paper}>
