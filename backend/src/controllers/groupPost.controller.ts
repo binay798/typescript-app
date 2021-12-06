@@ -143,7 +143,8 @@ export const modifyPostLikes = catchAsync(
         { new: true }
       );
     }
-    post = await post;
+    if (!post) return next(new AppError('Post not found', 404));
+    post = await post.populate({ path: 'author' });
 
     res.status(200).json({
       status: 'success',

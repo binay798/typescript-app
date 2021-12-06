@@ -15,7 +15,7 @@ import axiosMain from 'axios';
 
 function HomepageRightSection() {
   const [users, setUsers] = useState<User[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const cancelReq = axiosMain.CancelToken.source();

@@ -33,10 +33,22 @@ interface PostProps {
   data: SinglePost;
 }
 function GroupPost(props: PostProps) {
+  const state = useSelector((state: RootState) => state.auth);
   const [post, setPost] = useState(props.data);
   const group = useSelector((state: RootState) => state.group);
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    if (!state.user) return;
+    const existUser = post.likes.find((el) => el === state.user?._id);
+    if (existUser) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post.likes]);
 
   const modifyLike = async () => {
     try {
@@ -56,7 +68,11 @@ function GroupPost(props: PostProps) {
     <Card>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
+          <Avatar
+            src={`${baseUrl}/static/images/${post.author.photo}`}
+            sx={{ bgcolor: red[500] }}
+            aria-label='recipe'
+          >
             R
           </Avatar>
         }
@@ -117,7 +133,7 @@ function GroupPost(props: PostProps) {
             startIcon={<ThumbUpAltIcon />}
             sx={{ flex: 1 }}
           >
-            Like
+            {isLiked ? 'Liked' : 'Like'}
           </Button>
           <Button
             startIcon={<ChatBubbleOutlineOutlinedIcon />}
