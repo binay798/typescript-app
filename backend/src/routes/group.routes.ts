@@ -22,6 +22,8 @@ router.get(
   protectRoutes,
   groupController.getAllJoinedGroup
 );
+router.get('/count', groupController.countGroups);
+router.get('/search/:name', groupController.searchGroup);
 
 router
   .route('/:id')

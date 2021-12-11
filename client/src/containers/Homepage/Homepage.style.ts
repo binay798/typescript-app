@@ -1,8 +1,8 @@
 export const container = {
-  minHeight: '100vh',
+  height: 'calc(100vh - 65px)',
   backgroundColor: 'var(--body)',
   color: 'var(--light)',
-  padding: '1rem',
+  // padding: '1rem',
 };
 
 export const postBtn = {

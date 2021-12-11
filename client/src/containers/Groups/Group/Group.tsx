@@ -94,7 +94,7 @@ function Group() {
     );
   }
   return (
-    <Box>
+    <Box sx={{ overflowY: 'scroll', height: '100%' }}>
       {/* GROUP PHOTO */}
       <Box position='relative' sx={groupPhotoContainer}>
         <img

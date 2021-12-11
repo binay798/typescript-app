@@ -130,7 +130,7 @@ function GroupPost(props: PostProps) {
         >
           <Button
             onClick={modifyLike}
-            startIcon={<ThumbUpAltIcon />}
+            startIcon={isLiked ? <ThumbUpAltIcon /> : <ThumbUpOutlinedIcon />}
             sx={{ flex: 1 }}
           >
             {isLiked ? 'Liked' : 'Like'}

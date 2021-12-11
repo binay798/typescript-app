@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import {
   Grid,
   Box,
@@ -13,6 +13,8 @@ import {
   ListItemIcon,
   CircularProgress,
   Stack,
+  Paper,
+  Avatar,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -29,16 +31,10 @@ import axiosMain from 'axios';
 
 const leftSideStyle = {
   background: 'var(--appbar)',
-  minHeight: 'calc(100vh - 6rem)',
   padding: '1rem',
   height: '100%',
   '&::-webkit-scrollbar': { display: 'none' },
   borderRight: '1px solid gray',
-};
-
-const rightSideStyle = {
-  background: 'var(--body)',
-  height: 'calc(100vh - 6rem)',
   overflowY: 'scroll',
 };
 
@@ -57,7 +53,7 @@ function Groups() {
     (async () => {
       setLoading(true);
       try {
-        let res = await axios.get('/api/v1/groups?limit=5', {
+        let res = await axios.get('/api/v1/groups?limit=4', {
           cancelToken: cancelReq.token,
         });
         dispatch({
@@ -75,7 +71,7 @@ function Groups() {
     };
   }, [dispatch]);
   return (
-    <Grid container>
+    <Grid container sx={{ height: 'calc(100vh - 65px)' }}>
       <Box component={Grid} item sm={3}>
         <Box sx={{ ...leftSideStyle, overflowY: 'scroll' }}>
           <Typography
@@ -85,21 +81,8 @@ function Groups() {
           >
             Groups
           </Typography>
-          {/* SEARCH GROUPS */}
-          <TextField
-            sx={{ width: '100%' }}
-            id='outlined-basic'
-            label='Search groups'
-            variant='outlined'
-            type='text'
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <MemoizedSearchGroup />
+
           {/* CREATE NEW GROUP BUTTON */}
           <Link
             style={{ color: 'inherit', textDecoration: 'none' }}
@@ -129,14 +112,8 @@ function Groups() {
           )}
         </Box>
       </Box>
-      <Grid item sm={9}>
-        <Box
-          sx={{
-            ...rightSideStyle,
-            overflowY: 'scroll',
-            '&::-webkit-scrollbar': { display: 'none' },
-          }}
-        >
+      <Grid item sm={9} sx={{ background: 'var(--body)', height: '100%' }}>
+        <Box sx={{ height: '100%' }}>
           <Outlet />
         </Box>
       </Grid>
@@ -199,4 +176,93 @@ function YourGroupList(props: YourGroupListProps): JSX.Element {
   );
 }
 
+function SearchGroup(): JSX.Element {
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [groups, setGroups] = useState<null | Group[]>(null);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const submitHandler = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (name === '') return;
+    setLoading(true);
+    try {
+      const res = await axios.get(`/api/v1/groups/search/${name}?limit=5`);
+      setGroups(res.data.groups);
+      setOpen(true);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+  return (
+    <Box position='relative'>
+      <form onSubmit={submitHandler}>
+        <TextField
+          sx={{ width: '100%' }}
+          id='outlined-basic'
+          label='Search groups'
+          variant='outlined'
+          type='text'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: loading ? (
+              <InputAdornment position='end'>
+                <CircularProgress size={20} />
+              </InputAdornment>
+            ) : null,
+          }}
+        />
+      </form>
+      <Paper
+        sx={{
+          position: 'absolute',
+          top: '120%',
+          left: '0',
+          width: '100%',
+          zIndex: 10,
+          display: open ? 'block' : 'none',
+        }}
+      >
+        <List>
+          {groups &&
+            groups.length !== 0 &&
+            groups.map((el, id) => {
+              return (
+                <Link
+                  key={id}
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                  to={`/groups/${el._id}`}
+                >
+                  <ListItem onClick={handleClose} disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <Avatar
+                          src={`${baseUrl}/static/images/${el.photo}`}
+                          alt='list item'
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={el.name} />
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
+              );
+            })}
+        </List>
+      </Paper>
+    </Box>
+  );
+}
+
+const MemoizedSearchGroup = memo(SearchGroup);
 export default Groups;

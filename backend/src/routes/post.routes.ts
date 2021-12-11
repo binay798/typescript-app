@@ -17,6 +17,8 @@ router
     postController.createPost
   );
 
+router.get('/count', postController.countPosts);
+
 router
   .route('/:id')
   .get(postController.getPost)

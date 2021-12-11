@@ -39,7 +39,7 @@ function HomepageRightSection() {
     <Box
       sx={{
         overflowY: 'scroll',
-        height: '88vh',
+        height: '100%',
         '&::-webkit-scrollbar': {
           display: 'none',
         },

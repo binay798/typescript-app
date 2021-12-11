@@ -3,6 +3,7 @@ export const addPostPaper = {
   padding: '3rem',
   margin: '0 auto',
   background: 'var(--appbar)',
+  width: '100%',
 };
 
 export const postBtn = {

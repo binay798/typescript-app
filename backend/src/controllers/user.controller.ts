@@ -14,7 +14,16 @@ export const getAllUsers = catchAsync(
       .pagination();
 
     const users = await query.query;
+    res.status(200).json({
+      status: 'success',
+      users,
+    });
+  }
+);
 
+export const countUsers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.countDocuments();
     res.status(200).json({
       status: 'success',
       users,

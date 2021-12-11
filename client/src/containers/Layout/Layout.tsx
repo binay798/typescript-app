@@ -9,7 +9,7 @@ function Layout(): JSX.Element {
   return (
     <div>
       {/* <Box sx={{ flexGrow: 1 }}> */}
-      <AppBar sx={classes.appBar} position='sticky'>
+      <AppBar sx={classes.appBar} position='relative'>
         <Toolbar>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>

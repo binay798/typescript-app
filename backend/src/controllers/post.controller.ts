@@ -23,6 +23,15 @@ export const createPost = catchAsync(
     });
   }
 );
+export const countPosts = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const posts = await Post.countDocuments();
+    res.status(200).json({
+      status: 'success',
+      posts,
+    });
+  }
+);
 
 export const getAllPosts = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

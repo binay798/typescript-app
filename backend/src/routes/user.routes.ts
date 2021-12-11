@@ -15,6 +15,8 @@ router
   .get(authController.protectRoutes, userController.getAllUsers)
   .patch(authController.protectRoutes, userController.updateUser);
 
+router.get('/count', userController.countUsers);
+
 router.get('/:id', userController.getUser);
 router
   .route('/update-pic')

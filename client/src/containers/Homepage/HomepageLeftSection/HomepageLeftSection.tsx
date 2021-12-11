@@ -28,7 +28,7 @@ function HomepageLeftSection(): JSX.Element {
     const cancelReq = axiosMain.CancelToken.source();
     (async () => {
       try {
-        const res = await axios.get('/api/v1/groups?limit=6', {
+        const res = await axios.get('/api/v1/groups?limit=4', {
           cancelToken: cancelReq.token,
         });
         setGroups(res.data.groups);
@@ -45,7 +45,7 @@ function HomepageLeftSection(): JSX.Element {
     <Box
       sx={{
         overflowY: 'scroll',
-        height: '88vh',
+        height: '100%',
         '&::-webkit-scrollbar': {
           display: 'none',
         },
@@ -141,10 +141,14 @@ function HomepageLeftSection(): JSX.Element {
               </Link>
             );
           })}
-
-        <Button sx={{ margin: '2rem' }} variant='contained'>
-          Explore more groups
-        </Button>
+        <Link
+          to={'/groups'}
+          style={{ color: 'inherit', textDecoration: 'none' }}
+        >
+          <Button sx={{ margin: '2rem' }} variant='contained'>
+            Explore more groups
+          </Button>
+        </Link>
       </List>
     </Box>
   );

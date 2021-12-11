@@ -22,6 +22,28 @@ export const getAllGroups = catchAsync(
   }
 );
 
+export const searchGroup = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const groupName = req.params.name;
+    const groups = await Group.find({
+      name: new RegExp(groupName, 'i'),
+    });
+    res.status(200).json({
+      status: 'success',
+      groups,
+    });
+  }
+);
+export const countGroups = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const groups = await Group.countDocuments();
+    res.status(200).json({
+      status: 'success',
+      groups,
+    });
+  }
+);
+
 export const createGroup = catchAsync(
   async (req: UserRequest, res: Response, next: NextFunction) => {
     const { name, status, description, location } = req.body;

@@ -23,9 +23,6 @@ import * as actionCreators from '../../../store/actionCreators/index';
 import { useDispatch } from 'react-redux';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
-const container = {
-  padding: '4rem',
-};
 const paper = {
   padding: '2rem',
   background: 'var(--appbar)',
@@ -90,7 +87,7 @@ function CreateGroup(): JSX.Element {
     }
   };
   return (
-    <Box sx={container}>
+    <Box sx={{ overflowY: 'scroll', height: '100%', padding: '2rem' }}>
       <Paper sx={paper}>
         {/* BREADCRUMBS */}
         <Stack direction='row' sx={{ marginBottom: '1rem' }}>
