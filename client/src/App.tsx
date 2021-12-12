@@ -24,6 +24,7 @@ const Users = React.lazy(() => import('./containers/Users/Users'));
 const CreateGroup = React.lazy(
   () => import('./containers/Groups/CreateGroup/CreateGroup')
 );
+const User = React.lazy(() => import('./containers/Profile/User/User'));
 
 const theme = createTheme({
   typography: {
@@ -59,6 +60,15 @@ function App(): JSX.Element {
                   index
                   element={<LazyComponent component={<Homepage />} />}
                 />
+                <Route
+                  path='/:username'
+                  element={<LazyComponent component={<User />} />}
+                >
+                  <Route index element={<Posts />} />
+                  <Route path='about' element={<About />} />
+                  <Route path='photos' element={<Photos />} />
+                  <Route path='edit' element={<EditProfile />} />
+                </Route>
                 {/* PROFILE */}
                 <Route
                   path='profile'

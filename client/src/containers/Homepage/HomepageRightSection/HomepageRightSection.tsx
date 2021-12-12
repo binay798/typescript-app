@@ -12,6 +12,7 @@ import {
 import axios, { baseUrl } from '../../../axiosInstance';
 import { User } from '../../../store/reducers/auth.reducer';
 import axiosMain from 'axios';
+import { Link } from 'react-router-dom';
 
 function HomepageRightSection() {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -67,15 +68,21 @@ function HomepageRightSection() {
         {users &&
           users.map((el, id) => {
             return (
-              <ListItemButton key={id}>
-                <ListItemIcon>
-                  <Avatar
-                    src={`${baseUrl}/static/images/${el.photo}`}
-                    alt='B'
-                  />
-                </ListItemIcon>
-                <ListItemText primary={`${el.firstname} ${el.lastname}`} />
-              </ListItemButton>
+              <Link
+                key={id}
+                to={`/${el.username}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <ListItemButton>
+                  <ListItemIcon>
+                    <Avatar
+                      src={`${baseUrl}/static/images/${el.photo}`}
+                      alt='B'
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={`${el.firstname} ${el.lastname}`} />
+                </ListItemButton>
+              </Link>
             );
           })}
 
