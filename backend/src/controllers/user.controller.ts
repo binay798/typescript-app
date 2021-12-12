@@ -21,6 +21,25 @@ export const getAllUsers = catchAsync(
   }
 );
 
+export const searchUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userName = req.params.name;
+    // const users = await User.find({
+    //   firstname: new RegExp(userName, 'i'),
+    // });
+    const users = await User.find({
+      $or: [
+        { firstname: new RegExp(userName, 'i') },
+        { username: new RegExp(userName, 'i') },
+      ],
+    });
+    res.status(200).json({
+      status: 'success',
+      users,
+    });
+  }
+);
+
 export const countUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const users = await User.countDocuments();

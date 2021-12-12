@@ -12,7 +12,12 @@ import {
   Avatar,
   Pagination,
   CircularProgress,
+  List,
+  ListSubheader,
+  ListItemButton,
+  ListItemIcon,
 } from '@mui/material';
+
 import SearchIcon from '@mui/icons-material/Search';
 import axios, { baseUrl } from '../../axiosInstance';
 import { User } from '../../store/reducers/auth.reducer';
@@ -55,6 +60,23 @@ function Users(): JSX.Element {
 }
 
 function LeftContainer(): JSX.Element {
+  const [users, setUsers] = useState<User[] | null>(null);
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const searchUser = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.get(`/api/v1/users/search/${name}`);
+      setUsers(res.data.users);
+      setName('');
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+
   return (
     <Box>
       <Typography
@@ -66,12 +88,14 @@ function LeftContainer(): JSX.Element {
         Users
       </Typography>
       {/* USER SEARCH FORM */}
-      <form style={{ padding: '1rem' }}>
+      <form onSubmit={searchUser} style={{ padding: '0 1rem' }}>
         <Stack direction='column' spacing={2} sx={{ marginBottom: '2rem' }}>
           <TextField
             sx={{ width: '100%' }}
             variant='outlined'
             label='Search User'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position='start'>
@@ -80,11 +104,52 @@ function LeftContainer(): JSX.Element {
               ),
             }}
           />
-          <Button variant='contained' color='secondary'>
-            Search
+          <Button
+            disabled={loading}
+            type='submit'
+            variant='contained'
+            color='secondary'
+          >
+            {loading ? 'Searching...' : 'Search'}
           </Button>
         </Stack>
       </form>
+      {users && (
+        <List
+          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+          component='nav'
+          aria-labelledby='nested-list-subheader'
+          subheader={
+            <ListSubheader component='div' id='nested-list-subheader'>
+              Serach results
+            </ListSubheader>
+          }
+        >
+          {users.length === 0 && (
+            <Typography
+              variant='body2'
+              color='secondary'
+              sx={{ padding: '0 1.5rem' }}
+            >
+              No users found.
+            </Typography>
+          )}
+          {users.length !== 0 &&
+            users.map((el, id) => {
+              return (
+                <ListItemButton key={id}>
+                  <ListItemIcon>
+                    <Avatar src={`${baseUrl}/static/images/${el.photo}`} />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{ color: 'secondary.main' }}
+                    primary={`${el.firstname} ${el.lastname}`}
+                  />
+                </ListItemButton>
+              );
+            })}
+        </List>
+      )}
     </Box>
   );
 }

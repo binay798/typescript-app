@@ -16,6 +16,7 @@ router
   .patch(authController.protectRoutes, userController.updateUser);
 
 router.get('/count', userController.countUsers);
+router.get('/search/:name', userController.searchUser);
 
 router.get('/:id', userController.getUser);
 router
