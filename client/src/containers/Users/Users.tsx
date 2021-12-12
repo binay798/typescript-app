@@ -21,6 +21,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import axios, { baseUrl } from '../../axiosInstance';
 import { User } from '../../store/reducers/auth.reducer';
+import { Link } from 'react-router-dom';
 
 const leftSideStyle = {
   background: 'var(--appbar)',
@@ -137,15 +138,21 @@ function LeftContainer(): JSX.Element {
           {users.length !== 0 &&
             users.map((el, id) => {
               return (
-                <ListItemButton key={id}>
-                  <ListItemIcon>
-                    <Avatar src={`${baseUrl}/static/images/${el.photo}`} />
-                  </ListItemIcon>
-                  <ListItemText
-                    sx={{ color: 'secondary.main' }}
-                    primary={`${el.firstname} ${el.lastname}`}
-                  />
-                </ListItemButton>
+                <Link
+                  key={id}
+                  to={`/${el.username}`}
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <Avatar src={`${baseUrl}/static/images/${el.photo}`} />
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{ color: 'secondary.main' }}
+                      primary={`${el.firstname} ${el.lastname}`}
+                    />
+                  </ListItemButton>
+                </Link>
               );
             })}
         </List>
@@ -240,7 +247,12 @@ function RightContainer(): JSX.Element {
                       }
                     />
                     <Button size='small' variant='outlined' color='primary'>
-                      View
+                      <Link
+                        to={`/${el.username}`}
+                        style={{ color: 'inherit', textDecoration: 'none' }}
+                      >
+                        View
+                      </Link>
                     </Button>
                   </Stack>
                 </Paper>

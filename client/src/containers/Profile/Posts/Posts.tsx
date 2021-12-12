@@ -32,6 +32,7 @@ import axiosMain from 'axios';
 function Posts(): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
   const [posts, setPosts] = useState<SinglePost[] | null>(null);
+
   // const [loading, setLoading] = useState(false);
   // GET YOUR POST
   useEffect(() => {
@@ -59,14 +60,14 @@ function Posts(): JSX.Element {
   }, []);
   return (
     <Grid container spacing={2}>
-      <Grid item sm={5}>
+      <Grid item xs={12} sm={5}>
         <Stack direction='column' spacing={2}>
           <Intro authorId={state.user?._id} />
 
           <Photos posts={posts} />
         </Stack>
       </Grid>
-      <Grid item sm={7}>
+      <Grid item xs={12} sm={7}>
         <AddPost />
 
         {/* ALL POSTS */}

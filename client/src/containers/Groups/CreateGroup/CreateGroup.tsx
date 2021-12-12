@@ -36,6 +36,7 @@ const addGroupPhoto = {
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
+  marginBottom: '2rem',
 };
 
 const img = {
@@ -111,7 +112,7 @@ function CreateGroup(): JSX.Element {
         </Typography>
         {/* MAIN FORM CONTAINER */}
         <form onSubmit={submitHandler}>
-          <Stack direction='row' spacing={3}>
+          <Stack direction='row' spacing={3} sx={{ flexWrap: 'wrap' }}>
             <Stack direction='column' spacing={2} sx={{ flex: 1 }}>
               <TextField
                 sx={{ width: '100%' }}
@@ -159,24 +160,8 @@ function CreateGroup(): JSX.Element {
               </FormControl>
               {/* UPLOADED IMAGE */}
               {imgSrc && <img style={img} src={imgSrc} alt='uploaded' />}
-              <Button
-                disabled={loading}
-                startIcon={<AddIcon />}
-                variant='contained'
-                type='submit'
-              >
-                Create Group
-              </Button>
             </Stack>
-            {/* <Stack
-              direction='column'
-              alignItems='center'
-              justifyContent='center'
-              sx={addGroupPhoto}
-            >
-              <AddIcon sx={{ width: '4rem', height: '4rem' }} />
-              <Typography>Add Photo</Typography>
-            </Stack> */}
+
             <label style={addGroupPhoto} htmlFor='icon-button-file'>
               <Input
                 sx={{ display: 'none' }}
@@ -196,6 +181,14 @@ function CreateGroup(): JSX.Element {
               </Typography>
             </label>
           </Stack>
+          <Button
+            disabled={loading}
+            startIcon={<AddIcon />}
+            variant='contained'
+            type='submit'
+          >
+            Create Group
+          </Button>
         </form>
       </Paper>
     </Box>

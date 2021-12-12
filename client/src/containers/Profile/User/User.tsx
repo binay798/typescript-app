@@ -14,6 +14,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  useMediaQuery,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -33,6 +34,7 @@ function User(): JSX.Element {
   const [user, setUser] = useState<MainUser | null>(null);
   const [navs, setNavs] = useState('posts');
   const params = useParams();
+  const mdScreen = useMediaQuery('(max-width: 960px)');
 
   useEffect(() => {
     (async () => {
@@ -48,21 +50,52 @@ function User(): JSX.Element {
   }, [params.username]);
 
   if (!user) {
-    return <p>Loading...</p>;
+    return (
+      <Box
+        sx={{
+          width: '100%',
+          height: 'calc(100vh - 65px)',
+          background: 'var(--body)',
+        }}
+      >
+        <Stack
+          direction='row'
+          sx={{ height: '100%' }}
+          alignItems='center'
+          justifyContent='center'
+          spacing={2}
+        >
+          <CircularProgress />
+          <Typography variant='body1' color='secondary.main'>
+            Loading...
+          </Typography>
+        </Stack>
+      </Box>
+    );
   }
   return (
     <Box>
       {/* TOP SECTION */}
-      <Box sx={classes.topContainer}>
+      <Box
+        sx={{
+          background: 'var(--appbar)',
+          padding: mdScreen ? '0 2rem' : '0 20rem',
+        }}
+      >
         {/* COVER PHOTO SECTION */}
         <Box sx={classes.coverPhoto}>Add</Box>
         {/* USER SUMMARY SECTION */}
-        <Box sx={{ padding: '0 4rem', marginBottom: '1rem' }}>
+        <Box
+          sx={{
+            padding: !mdScreen ? '0 4rem' : '0 2rem',
+            marginBottom: '1rem',
+          }}
+        >
           <Stack
             direction='row'
             sx={{ marginTop: '-3rem' }}
             spacing={4}
-            alignItems='flex-end'
+            alignItems={!mdScreen ? 'flex-end' : 'center'}
           >
             {/* USER AVATAR */}
             <Badge
@@ -97,7 +130,7 @@ function User(): JSX.Element {
           direction='row'
           spacing={1}
           alignItems='center'
-          sx={{ padding: '0 4rem', paddingBottom: '1rem' }}
+          sx={{ padding: '0 4rem', paddingBottom: '2rem' }}
         >
           <Button
             onClick={() => setNavs('posts')}
@@ -105,12 +138,7 @@ function User(): JSX.Element {
           >
             Posts
           </Button>
-          <Button
-            onClick={() => setNavs('about')}
-            variant={navs === 'about' ? 'contained' : 'outlined'}
-          >
-            About
-          </Button>
+
           <Button
             onClick={() => setNavs('photos')}
             variant={navs === 'photos' ? 'contained' : 'outlined'}
@@ -122,13 +150,12 @@ function User(): JSX.Element {
       {/* BOTTOM SECTION */}
       <Box
         sx={{
-          padding: '2rem 24rem',
+          padding: mdScreen ? '0 2rem' : '2rem 24rem',
           background: 'var(--body)',
           minHeight: '100vh',
         }}
       >
         {navs === 'posts' ? <Posts user={user} /> : null}
-        {navs === 'about' ? <About user={user} /> : null}
         {navs === 'photos' ? <Photos user={user} /> : null}
       </Box>
     </Box>
@@ -140,7 +167,6 @@ interface PostsProps {
 }
 function Posts(props: PostsProps): JSX.Element {
   const [posts, setPosts] = useState<MainPost[] | null>(null);
-  console.log(props);
 
   // GET POSTS
   useEffect(() => {
@@ -157,7 +183,7 @@ function Posts(props: PostsProps): JSX.Element {
   }, [props.user._id]);
   return (
     <Grid container spacing={2}>
-      <Grid item sm={5} position='relative'>
+      <Grid item xs={12} sm={5} position='relative'>
         <Stack
           direction='column'
           sx={{ position: 'sticky', top: '2rem' }}
@@ -237,7 +263,7 @@ function Posts(props: PostsProps): JSX.Element {
           </Paper>
         </Stack>
       </Grid>
-      <Grid item sm={7}>
+      <Grid item xs={12} sm={7}>
         {/* ALL POSTS */}
         <Stack direction='column' sx={{ margin: '0rem auto' }} spacing={4}>
           {!posts && (
@@ -272,13 +298,6 @@ function Posts(props: PostsProps): JSX.Element {
       </Grid>
     </Grid>
   );
-}
-
-interface AboutProps {
-  user: MainUser;
-}
-function About(props: AboutProps): JSX.Element {
-  return <Box>About</Box>;
 }
 
 interface PhotosProps {

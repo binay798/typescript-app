@@ -3,6 +3,7 @@ export const container = {
   backgroundColor: 'var(--body)',
   color: 'var(--light)',
   // padding: '1rem',
+  width: '100%',
 };
 
 export const postBtn = {

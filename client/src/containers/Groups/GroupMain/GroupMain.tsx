@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Pagination,
   Stack,
+  useMediaQuery,
 } from '@mui/material';
 import GroupCard from '../../../components/GroupCard/GroupCard';
 import { useDispatch } from 'react-redux';
@@ -28,6 +29,7 @@ function GroupMain(): JSX.Element {
   const limit = 2;
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  const mdScreen = useMediaQuery('(max-width:600px)');
 
   // COUNT DOCUMENTS
   useEffect(() => {
@@ -57,7 +59,14 @@ function GroupMain(): JSX.Element {
   }, [dispatch, page]);
 
   return (
-    <Box sx={{ padding: '2rem 8rem', overflowY: 'scroll', height: '100%' }}>
+    <Box
+      sx={{
+        padding: !mdScreen ? '2rem 8rem' : '2rem',
+        overflowY: 'scroll',
+        height: '100%',
+        width: '100%',
+      }}
+    >
       <Typography
         color='secondary.light'
         style={{ fontWeight: 600 }}

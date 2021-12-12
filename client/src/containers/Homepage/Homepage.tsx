@@ -77,7 +77,7 @@ function Homepage(): JSX.Element {
       >
         <HomepageLeftSection />
       </Box>
-      <Grid sx={{ height: '100%' }} item md={5} sm={8}>
+      <Grid sx={{ height: '100%', width: '100%' }} item md={5} sm={8}>
         <Box
           sx={{
             // margin: '0 auto',
@@ -86,9 +86,15 @@ function Homepage(): JSX.Element {
             // height: 'calc(100% - 2rem)',
             // width: '75%',
             height: '100%',
+            width: '100%',
+            padding: '0 1rem',
           }}
         >
-          <Stack sx={{ height: '100%' }} direction='column' spacing={0}>
+          <Stack
+            sx={{ height: '100%', width: '100%' }}
+            direction='column'
+            spacing={0}
+          >
             <Box
               sx={{
                 margin: '0 auto',

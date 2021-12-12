@@ -11,6 +11,7 @@ import {
   Input,
   Modal,
   Paper,
+  useMediaQuery,
 } from '@mui/material';
 import * as classes from './Profile.style';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -25,6 +26,8 @@ import { baseUrl } from './../../axiosInstance';
 
 function Profile(): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
+  const mdScreen = useMediaQuery('(max-width: 960px)');
+
   const [file, setFile] = useState<File>();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -51,14 +54,19 @@ function Profile(): JSX.Element {
   return (
     <Box>
       {/* TOP SECTION */}
-      <Box sx={classes.topContainer}>
+      <Box
+        sx={{
+          background: 'var(--appbar)',
+          padding: mdScreen ? '0 2rem' : '0 20rem',
+        }}
+      >
         {/* COVER PHOTO SECTION */}
         <Box sx={classes.coverPhoto}>Add</Box>
         {/* USER SUMMARY SECTION */}
         <Box sx={{ padding: '0 4rem', marginBottom: '1rem' }}>
           <Stack
             direction='row'
-            sx={{ marginTop: '-3rem' }}
+            sx={{ marginTop: '-3rem', flexWrap: 'wrap' }}
             spacing={4}
             alignItems='flex-end'
           >
@@ -100,22 +108,19 @@ function Profile(): JSX.Element {
             </Badge>
             <Stack direction='column'>
               <Typography
-                variant='h4'
+                variant={!mdScreen ? 'h4' : 'h5'}
                 sx={{ textTransform: 'capitalize' }}
                 color={blueGrey[100]}
                 component='div'
               >
                 {state.user?.firstname} {state.user?.lastname}
               </Typography>
-              {/* <Typography variant='h6' color={blueGrey[100]} component='div'>
-                72 mutual friends
-              </Typography> */}
+              <Link style={{ textDecoration: 'none' }} to='/profile/edit'>
+                <Button variant='contained' color='primary'>
+                  Edit Profile
+                </Button>
+              </Link>
             </Stack>
-            <Link style={{ textDecoration: 'none' }} to='/profile/edit'>
-              <Button variant='contained' color='primary'>
-                Edit Profile
-              </Button>
-            </Link>
           </Stack>
           <Divider sx={{ borderColor: 'var(--divider)', marginTop: '2rem' }} />
         </Box>
@@ -144,7 +149,13 @@ function Profile(): JSX.Element {
         </Stack>
       </Box>
       {/* BOTTOM SECTION */}
-      <Box sx={classes.bottomContainer}>
+      <Box
+        sx={{
+          background: 'var(--body)',
+          padding: mdScreen ? '0 2rem' : '2rem 24rem',
+          minHeight: '100vh',
+        }}
+      >
         <Outlet />
       </Box>
     </Box>

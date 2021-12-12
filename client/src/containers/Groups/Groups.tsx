@@ -72,7 +72,12 @@ function Groups() {
   }, [dispatch]);
   return (
     <Grid container sx={{ height: 'calc(100vh - 65px)' }}>
-      <Box component={Grid} item sm={3}>
+      <Box
+        component={Grid}
+        item
+        display={{ xs: 'none', sm: 'none', md: 'block' }}
+        md={3}
+      >
         <Box sx={{ ...leftSideStyle, overflowY: 'scroll' }}>
           <Typography
             color='secondary.light'
@@ -112,7 +117,13 @@ function Groups() {
           )}
         </Box>
       </Box>
-      <Grid item sm={9} sx={{ background: 'var(--body)', height: '100%' }}>
+      <Grid
+        item
+        md={9}
+        sm={12}
+        xs={12}
+        sx={{ background: 'var(--body)', height: '100%' }}
+      >
         <Box sx={{ height: '100%' }}>
           <Outlet />
         </Box>
