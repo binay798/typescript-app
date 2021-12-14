@@ -15,6 +15,7 @@ export interface UserSchema extends mongoose.Document {
   password: string;
   confirmPassword: string | undefined;
   photo: string;
+  coverPhoto: string;
   comparePassword(
     candidatePassword: string,
     mainPassword: string
@@ -77,6 +78,9 @@ const userSchema = new mongoose.Schema<UserSchema>(
       },
     },
     photo: {
+      type: String,
+    },
+    coverPhoto: {
       type: String,
     },
     passwordResetToken: {
