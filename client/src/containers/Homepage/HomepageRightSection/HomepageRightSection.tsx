@@ -9,7 +9,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
-import axios, { baseUrl } from '../../../axiosInstance';
+import axios from '../../../axiosInstance';
 import { User } from '../../../store/reducers/auth.reducer';
 import axiosMain from 'axios';
 import { Link } from 'react-router-dom';
@@ -75,10 +75,7 @@ function HomepageRightSection() {
               >
                 <ListItemButton>
                   <ListItemIcon>
-                    <Avatar
-                      src={`${baseUrl}/static/images/${el.photo}`}
-                      alt='B'
-                    />
+                    <Avatar src={`${el.photo}`} alt='B' />
                   </ListItemIcon>
                   <ListItemText primary={`${el.firstname} ${el.lastname}`} />
                 </ListItemButton>

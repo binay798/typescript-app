@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom';
 import Post from '../../../components/Post/Post';
 import { Post as MainPost } from '../../../store/reducers/post.reducer';
 
-import axios, { baseUrl } from './../../../axiosInstance';
+import axios from './../../../axiosInstance';
 import { User as MainUser } from '../../../store/reducers/auth.reducer';
 import axiosMain from 'axios';
 
@@ -105,7 +105,7 @@ function User(): JSX.Element {
               <Avatar
                 sx={{ width: 170, height: 170 }}
                 alt='Travis Howard'
-                src={`${baseUrl}/static/images/${user.photo}`}
+                src={`${user.photo}`}
               />
             </Badge>
             <Stack direction='column'>
@@ -363,7 +363,7 @@ function Photos(props: PhotosProps): JSX.Element {
                   height: '100%',
                   objectFit: 'cover' as 'cover',
                 }}
-                src={`${baseUrl}/static/images/${el.photo}`}
+                src={`${el.photo}`}
                 alt='hello'
               />
             );

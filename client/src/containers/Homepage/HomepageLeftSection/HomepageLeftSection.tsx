@@ -16,7 +16,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/Store';
-import axios, { baseUrl } from '../../../axiosInstance';
+import axios from '../../../axiosInstance';
 import { Group } from '../../../store/reducers/group.reducer';
 import axiosMain from 'axios';
 
@@ -55,10 +55,7 @@ function HomepageLeftSection(): JSX.Element {
         <Link to='profile' style={{ color: 'inherit', textDecoration: 'none' }}>
           <ListItemButton>
             <ListItemIcon>
-              <Avatar
-                src={`${baseUrl}/static/images/${state.user?.photo}`}
-                alt='B'
-              />
+              <Avatar src={`${state.user?.photo}`} alt='B' />
             </ListItemIcon>
             <ListItemText
               primary={
@@ -131,10 +128,7 @@ function HomepageLeftSection(): JSX.Element {
               >
                 <ListItemButton key={id}>
                   <ListItemIcon>
-                    <Avatar
-                      src={`${baseUrl}/static/images/${el.photo}`}
-                      alt='A'
-                    />
+                    <Avatar src={`${el.photo}`} alt='A' />
                   </ListItemIcon>
                   <ListItemText primary={el.name} />
                 </ListItemButton>

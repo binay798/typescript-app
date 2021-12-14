@@ -26,7 +26,6 @@ import axios from '../../axiosInstance';
 import * as Actions from '../../store/actions/index';
 import { RootState } from '../../store/Store';
 import { Group } from '../../store/reducers/group.reducer';
-import { baseUrl } from '../../axiosInstance';
 import axiosMain from 'axios';
 
 const leftSideStyle = {
@@ -158,11 +157,7 @@ function YourGroupList(props: YourGroupListProps): JSX.Element {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <img
-                      style={img}
-                      alt={el.name}
-                      src={`${baseUrl}/static/images/${el.photo}`}
-                    />
+                    <img style={img} alt={el.name} src={`${el.photo}`} />
                   </ListItemIcon>
                   <ListItemText
                     sx={{ color: blueGrey[100] }}
@@ -258,10 +253,7 @@ function SearchGroup(): JSX.Element {
                   <ListItem onClick={handleClose} disablePadding>
                     <ListItemButton>
                       <ListItemIcon>
-                        <Avatar
-                          src={`${baseUrl}/static/images/${el.photo}`}
-                          alt='list item'
-                        />
+                        <Avatar src={`${el.photo}`} alt='list item' />
                       </ListItemIcon>
                       <ListItemText primary={el.name} />
                     </ListItemButton>

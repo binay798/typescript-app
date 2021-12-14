@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@mui/material';
 import { Group } from '../../store/reducers/group.reducer';
-import { baseUrl } from '../../axiosInstance';
 import { Link } from 'react-router-dom';
 
 interface GroupCardProps {
@@ -19,7 +18,7 @@ function GroupCard(props: GroupCardProps) {
       <CardMedia
         component='img'
         height='240'
-        image={`${baseUrl}/static/images/${props.data.photo}`}
+        image={`${props.data.photo}`}
         alt='green iguana'
       />
       <CardContent>

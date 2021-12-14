@@ -22,7 +22,6 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import * as actionCreators from './../../store/actionCreators/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './../../store/Store';
-import { baseUrl } from './../../axiosInstance';
 
 function Profile(): JSX.Element {
   const state = useSelector((state: RootState) => state.auth);
@@ -103,7 +102,7 @@ function Profile(): JSX.Element {
               <Avatar
                 sx={{ width: 170, height: 170 }}
                 alt='Travis Howard'
-                src={`${baseUrl}/static/images/${state.user?.photo}`}
+                src={`${state.user?.photo}`}
               />
             </Badge>
             <Stack direction='column'>

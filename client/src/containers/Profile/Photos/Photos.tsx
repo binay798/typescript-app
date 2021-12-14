@@ -3,7 +3,7 @@ import { Typography, Box, Paper, CircularProgress, Stack } from '@mui/material';
 import * as classes from './Photos.style';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/Store';
-import axios, { baseUrl } from '../../../axiosInstance';
+import axios from '../../../axiosInstance';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
 import axiosMain from 'axios';
 
@@ -58,7 +58,7 @@ function Photos() {
               <img
                 key={id}
                 style={classes.img}
-                src={`${baseUrl}/static/images/${el.photo}`}
+                src={`${el.photo}`}
                 alt='hello'
               />
             );

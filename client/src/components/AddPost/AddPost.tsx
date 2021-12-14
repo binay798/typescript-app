@@ -19,7 +19,6 @@ import PublicIcon from '@mui/icons-material/Public';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
-import { baseUrl } from '../../axiosInstance';
 import { User } from '../../store/reducers/auth.reducer';
 import { useDispatch } from 'react-redux';
 import * as actionCreators from './../../store/actionCreators/index';
@@ -44,7 +43,7 @@ function AddPost(): JSX.Element {
   return (
     <Paper sx={classes.addPostPaper}>
       <Stack spacing={4} direction='row'>
-        <Avatar src={`${baseUrl}/static/images/${state.user?.photo}`} />
+        <Avatar src={`${state.user?.photo}`} />
 
         <Box onClick={handleOpen} sx={classes.postBtn}>
           What's on your mind {state.user?.firstname}?
@@ -129,10 +128,7 @@ function CreatePostModal(props: CreatePostModalProps): JSX.Element {
         </IconButton>
         {/* USER DETAIL */}
         <Stack direction='row' spacing={2} sx={{ marginBottom: '1rem' }}>
-          <Avatar
-            src={`${baseUrl}/static/images/${props.user?.photo}`}
-            alt='person'
-          />
+          <Avatar src={`${props.user?.photo}`} alt='person' />
           <ListItemText
             primary={
               <Typography

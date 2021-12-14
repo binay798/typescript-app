@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
-import axios, { baseUrl } from '../../axiosInstance';
+import axios from '../../axiosInstance';
 import { User } from '../../store/reducers/auth.reducer';
 import { Link } from 'react-router-dom';
 
@@ -147,7 +147,7 @@ function LeftContainer(): JSX.Element {
                 >
                   <ListItemButton>
                     <ListItemIcon>
-                      <Avatar src={`${baseUrl}/static/images/${el.photo}`} />
+                      <Avatar src={`${el.photo}`} />
                     </ListItemIcon>
                     <ListItemText
                       sx={{ color: 'secondary.main' }}
@@ -231,7 +231,7 @@ function RightContainer(): JSX.Element {
               <Grid key={id} item xs={12} sm={12} md={6}>
                 <Paper sx={{ padding: '2rem 3rem' }}>
                   <Stack direction='row' spacing={2} alignItems='center'>
-                    <Avatar src={`${baseUrl}/static/images/${el.photo}`} />
+                    <Avatar src={`${el.photo}`} />
                     <ListItemText
                       primary={
                         <Typography

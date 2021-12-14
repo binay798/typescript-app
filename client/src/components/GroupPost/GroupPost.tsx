@@ -69,7 +69,7 @@ function GroupPost(props: PostProps) {
       <CardHeader
         avatar={
           <Avatar
-            src={`${baseUrl}/static/images/${post.author.photo}`}
+            src={`${post.author.photo}`}
             sx={{ bgcolor: red[500] }}
             aria-label='recipe'
           >
@@ -213,10 +213,7 @@ function CommentBox(props: CommentProps): JSX.Element {
     <Box sx={{ padding: '2rem' }}>
       <form onSubmit={createComment}>
         <Stack direction='row' spacing={2} alignItems='center'>
-          <Avatar
-            src={`${baseUrl}/static/images/${state.user && state.user.photo}`}
-            alt='A'
-          />
+          <Avatar src={`${state.user && state.user.photo}`} alt='A' />
           <TextField
             variant='outlined'
             sx={{ width: '100%' }}
@@ -264,7 +261,7 @@ function CommentBox(props: CommentProps): JSX.Element {
             >
               <Stack direction='row' spacing={2} alignItems='center'>
                 <Avatar
-                  src={`${baseUrl}/static/images/${el.author.photo}`}
+                  src={`${el.author.photo}`}
                   alt='A'
                   sx={{ width: 24, height: 24 }}
                 />

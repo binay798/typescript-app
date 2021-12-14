@@ -24,7 +24,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PublicIcon from '@mui/icons-material/Public';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector, useDispatch } from 'react-redux';
-import axios, { baseUrl } from '../../../axiosInstance';
+import axios from '../../../axiosInstance';
 import * as Actions from '../../../store/actions/index';
 import { RootState } from '../../../store/Store';
 import { useParams } from 'react-router-dom';
@@ -99,7 +99,7 @@ function Group() {
       <Box position='relative' sx={groupPhotoContainer}>
         <img
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          src={`${baseUrl}/static/images/${state.selectedGroup.photo}`}
+          src={`${state.selectedGroup.photo}`}
           alt='group'
         />
         <Box

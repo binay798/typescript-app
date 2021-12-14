@@ -9,13 +9,16 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Outlet } from 'react-router-dom';
 import * as classes from './Layout.style';
 import { Link } from 'react-router-dom';
 import logo from './../../assets/logo.jpeg';
 import { RootState } from '../../store/Store';
 import { useSelector, useDispatch } from 'react-redux';
-import axios, { baseUrl } from '../../axiosInstance';
+import axios from '../../axiosInstance';
 import * as actionCreators from '../../store/actions';
 
 function Layout(): JSX.Element {
@@ -79,20 +82,20 @@ function Layout(): JSX.Element {
                 <Button
                   startIcon={
                     <Avatar
-                      src={`${baseUrl}/static/images/${state.user.photo}`}
+                      src={`${state.user.photo}`}
                       sx={{ width: 30, height: 30 }}
                     />
                   }
                   variant='outlined'
                   size='small'
-                  sx={{ borderRadius: 24 }}
+                  sx={{ borderRadius: 24, textTransform: 'none' }}
                   id='basic-button'
                   aria-controls='basic-menu'
                   aria-haspopup='true'
                   aria-expanded={open ? 'true' : undefined}
                   onClick={handleClick}
                 >
-                  {state.user.firstname} {state.user.lastname}
+                  {state.user.username}
                 </Button>
                 <Menu
                   id='basic-menu'
@@ -103,10 +106,25 @@ function Layout(): JSX.Element {
                     'aria-labelledby': 'basic-button',
                   }}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Stack direction='row' alignItems='center' spacing={1}>
+                      <AccountCircleIcon />
+                      <Typography variant='body1'>Profile</Typography>
+                    </Stack>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Stack direction='row' alignItems='center' spacing={1}>
+                      <ManageAccountsIcon />
+                      <Typography variant='body1'>My account</Typography>
+                    </Stack>
+                  </MenuItem>
                   <MenuItem onClick={logout}>
-                    {loading ? 'Logging out...' : 'Logout'}
+                    <Stack direction='row' alignItems='center' spacing={1}>
+                      <LogoutIcon />
+                      <Typography variant='body1'>
+                        {loading ? 'Logging out...' : 'Logout'}
+                      </Typography>
+                    </Stack>
                   </MenuItem>
                 </Menu>
               </>

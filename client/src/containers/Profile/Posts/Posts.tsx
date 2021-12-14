@@ -25,7 +25,6 @@ import axios from '../../../axiosInstance';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/Store';
 import { Post as SinglePost } from '../../../store/reducers/post.reducer';
-import { baseUrl } from '../../../axiosInstance';
 import { User } from '../../../store/reducers/auth.reducer';
 import axiosMain from 'axios';
 
@@ -140,7 +139,7 @@ function Photos(props: PhotosProps): JSX.Element {
               <Box key={id}>
                 <img
                   style={{ display: 'block', width: '100%', cursor: 'pointer' }}
-                  src={`${baseUrl}/static/images/${el.photo}`}
+                  src={`${el.photo}`}
                   alt='hello'
                 />
               </Box>

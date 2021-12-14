@@ -21,7 +21,6 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { blue } from '@mui/material/colors';
 import { Post as SinglePost } from '../../store/reducers/post.reducer';
-import { baseUrl } from './../../axiosInstance';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
@@ -69,7 +68,7 @@ function Post(props: PostProps): JSX.Element {
       <CardHeader
         avatar={
           <Avatar
-            src={`${baseUrl}/static/images/${post.author.photo}`}
+            src={`${post.author.photo}`}
             sx={{ bgcolor: 'red' }}
             aria-label='recipe'
           >
@@ -87,7 +86,7 @@ function Post(props: PostProps): JSX.Element {
       <CardMedia
         component='img'
         sx={{ width: '100%', objectFit: 'contain' }}
-        image={`${baseUrl}/static/images/${post.photo}`}
+        image={`${post.photo}`}
         alt='Paella dish'
       />
       <CardContent>
@@ -214,10 +213,7 @@ function CommentBox(props: CommentProps): JSX.Element {
     <Box sx={{ padding: '2rem' }}>
       <form onSubmit={createComment}>
         <Stack direction='row' spacing={2} alignItems='center'>
-          <Avatar
-            src={`${baseUrl}/static/images/${state.user && state.user.photo}`}
-            alt='A'
-          />
+          <Avatar src={`${state.user && state.user.photo}`} alt='A' />
           <TextField
             variant='outlined'
             sx={{ width: '100%' }}
@@ -272,7 +268,7 @@ function CommentBox(props: CommentProps): JSX.Element {
             >
               <Stack direction='row' spacing={2} alignItems='center'>
                 <Avatar
-                  src={`${baseUrl}/static/images/${el.author.photo}`}
+                  src={`${el.author.photo}`}
                   alt='A'
                   sx={{ width: 24, height: 24 }}
                 />
