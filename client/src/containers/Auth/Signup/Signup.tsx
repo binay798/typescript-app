@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Paper, Typography, Stack, TextField, Button } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  Stack,
+  TextField,
+  Button,
+  useMediaQuery,
+} from '@mui/material';
 import logo from './../../../assets/logo.jpeg';
 import { blueGrey } from '@mui/material/colors';
 import LoginIcon from '@mui/icons-material/Login';
@@ -30,6 +37,7 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const smScreen = useMediaQuery('(max-width: 600px)');
 
   // ------NEEDS TO BE REFACTORED FOR VALIDATION------
   const submitHandler = async (e: React.SyntheticEvent) => {
@@ -52,8 +60,15 @@ function Signup() {
 
   return (
     <Paper elevation={8} sx={container}>
-      <Stack direction='row' spacing={12}>
-        <img style={img} src={logo} alt='logo' />
+      <Stack
+        direction={smScreen ? 'column' : 'row'}
+        spacing={smScreen ? 0 : 12}
+      >
+        <img
+          style={{ ...img, display: smScreen ? 'none' : 'block' }}
+          src={logo}
+          alt='logo'
+        />
         <Stack sx={{ flex: 1 }} direction='column' spacing={2}>
           <Typography variant='h5' align='center' color={blueGrey[500]}>
             Create New Account

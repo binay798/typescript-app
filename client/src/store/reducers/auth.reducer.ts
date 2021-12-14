@@ -51,6 +51,11 @@ const reducer = (state = initialState, action: ActionType) => {
         ...state,
         user: { ...action.payload.user },
       };
+    case Actions.AuthAction.LOGOUT:
+      return {
+        user: null,
+        token: undefined,
+      };
     default:
       return state;
   }

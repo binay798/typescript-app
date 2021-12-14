@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { useMediaQuery } from '@mui/material';
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -10,6 +10,7 @@ const theme = createTheme({
   },
 });
 function Auth() {
+  const smScreen = useMediaQuery('(max-width: 600px)');
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -18,7 +19,7 @@ function Auth() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '4rem',
+          padding: smScreen ? '1rem' : '4rem',
         }}
       >
         <Outlet />

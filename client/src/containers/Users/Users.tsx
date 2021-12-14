@@ -16,6 +16,7 @@ import {
   ListSubheader,
   ListItemButton,
   ListItemIcon,
+  useMediaQuery,
 } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -34,23 +35,24 @@ const leftSideStyle = {
 const rightSideStyle = {
   background: 'var(--body)',
   height: '100vh',
-  padding: '4rem',
 };
 
 function Users(): JSX.Element {
+  const mdScreen = useMediaQuery('(max-width: 600px)');
   return (
     <Grid container>
-      <Grid item sm={3}>
+      <Box component={Grid} display={{ xs: 'none', sm: 'block' }} item sm={3}>
         <Box sx={{ ...leftSideStyle, overflowY: 'scroll' }}>
           <LeftContainer />
         </Box>
-      </Grid>
-      <Grid item sm={9}>
+      </Box>
+      <Grid item sm={9} xs={12}>
         <Box
           sx={{
             ...rightSideStyle,
             overflowY: 'scroll',
             '&::-webkit-scrollbar': { display: 'none' },
+            padding: mdScreen ? '1rem' : '4rem',
           }}
         >
           <RightContainer />
@@ -226,7 +228,7 @@ function RightContainer(): JSX.Element {
           users.length !== 0 &&
           users.map((el, id) => {
             return (
-              <Grid key={id} item sm={6}>
+              <Grid key={id} item xs={12} sm={12} md={6}>
                 <Paper sx={{ padding: '2rem 3rem' }}>
                   <Stack direction='row' spacing={2} alignItems='center'>
                     <Avatar src={`${baseUrl}/static/images/${el.photo}`} />

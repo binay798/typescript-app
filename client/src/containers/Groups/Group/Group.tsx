@@ -182,7 +182,7 @@ function GroupContainer(props: GroupContainerProps): JSX.Element {
 
   return (
     <Grid container sx={groupMainContainer} spacing={3}>
-      <Grid item sm={7}>
+      <Grid item xs={12} sm={7}>
         <Box>
           <CreateNewGroupPost />
           <Stack direction='column' sx={{ marginTop: '3rem' }} spacing={3}>
@@ -206,7 +206,7 @@ function GroupContainer(props: GroupContainerProps): JSX.Element {
           </Stack>
         </Box>
       </Grid>
-      <Grid item sm={5}>
+      <Grid item xs={12} sm={5}>
         <Box position='sticky' top={20}>
           <Paper sx={{ padding: '2rem' }}>
             <Typography gutterBottom variant='h6'>

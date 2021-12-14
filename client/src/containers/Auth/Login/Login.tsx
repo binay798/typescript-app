@@ -7,6 +7,7 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
+  useMediaQuery,
 } from '@mui/material';
 import logo from './../../../assets/logo.jpeg';
 import { blueGrey } from '@mui/material/colors';
@@ -25,8 +26,9 @@ const container = {
 
 const img = {
   display: 'block',
-  width: '15rem',
   objectFit: 'contain' as 'contain',
+  margin: '0 auto',
+  width: '15rem',
 };
 function Login() {
   const navigate = useNavigate();
@@ -34,6 +36,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const smScreen = useMediaQuery('(max-width: 600px)');
 
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -41,8 +44,15 @@ function Login() {
   };
   return (
     <Paper elevation={8} sx={container}>
-      <Stack direction='row' spacing={12}>
-        <img style={img} src={logo} alt='logo' />
+      <Stack
+        direction={smScreen ? 'column' : 'row'}
+        spacing={smScreen ? 0 : 12}
+      >
+        <img
+          style={{ ...img, display: smScreen ? 'none' : 'block' }}
+          src={logo}
+          alt='logo'
+        />
         <Stack sx={{ flex: 1 }} direction='column' spacing={2}>
           <Typography variant='h5' align='center' color={blueGrey[500]}>
             Login

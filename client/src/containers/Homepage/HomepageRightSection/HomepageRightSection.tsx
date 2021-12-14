@@ -85,10 +85,11 @@ function HomepageRightSection() {
               </Link>
             );
           })}
-
-        <Button sx={{ width: '95%' }} variant='contained'>
-          See more users
-        </Button>
+        <Link to='/users' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Button sx={{ width: '95%' }} variant='contained'>
+            See more users
+          </Button>
+        </Link>
       </List>
     </Box>
   );
